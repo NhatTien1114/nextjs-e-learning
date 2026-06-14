@@ -1,9 +1,10 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
-    content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+/** @type {import('tailwindcss').Config} */
+export default {
     theme: {
         extend: {
+            colors: {
+                primary: "#2C5EAD",
+            },
             fontFamily: {
                 primary: ["var(--font-be-vietnam-pro)"],
                 secondary: ["var(--font-manrope)"]
@@ -12,5 +13,3 @@ const config: Config = {
     },
     plugins: [],
 };
-
-export default config;

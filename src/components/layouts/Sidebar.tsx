@@ -1,13 +1,17 @@
+import ActiveLink from "@/common/ActiveLink";
+import { menuItems } from "@/constants";
+import { TMenuItems } from "@/types";
 import Link from "next/link";
+
 
 const Sidebar = () => {
     return (
         <div className="p-5 border-r border-gray-200 h-screen">
-            <Link href="/" className="font-bold text-3xl inline-block mb-5">UCADEMY</Link>
-            <ul>
-                <MenuItem url="/" title="Home" />
-                <MenuItem url="/courses" title="Courses" />
-                <MenuItem url="/profile" title="Profile" />
+            <Link href="/" className="font-bold text-3xl inline-block mb-5"><span className="text-primary">U</span>CADEMY</Link>
+            <ul className="flex flex-col gap-3">
+                {menuItems.map((item, index) =>
+                    <MenuItem key={index} url={item.url} title={item.title} icon={item.icon} />
+                )}
             </ul>
         </div>
     )
@@ -15,14 +19,12 @@ const Sidebar = () => {
 
 const MenuItem = ({
     url = "/",
-    title = ""
-}: {
-    url: string;
-    title: string;
-}) => {
+    title = "",
+    icon
+}: TMenuItems) => {
     return (
         <li>
-            <Link href={url} className="p-3 rounded-md flex items-center">{title}</Link>
+            <ActiveLink url={url}> {icon} {title}</ActiveLink>
         </li>
     )
 }
