@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { beVNPro } from "@/utils";
-import Sidebar from "@/components/layouts/Sidebar";
+import { ClerkProvider } from "@clerk/nextjs";
 
 
 export const metadata: Metadata = {
@@ -15,13 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={beVNPro.className}>
-        <div className="wrapper grid grid-cols-[300px_minmax(0,1fr)]">
-          <Sidebar />
-          <main>{children}</main>
-        </div>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={beVNPro.className}>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
