@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={cn("font-sans", geist.variable)}>
+      <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
         <body className={beVNPro.className}>
           <ThemeProvider
             attribute="class"

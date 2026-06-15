@@ -1,4 +1,7 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
 @theme {
     --color-primary: #2C5EAD;
     --color-grayDark: #9394A1;
@@ -6,18 +9,42 @@
     --color-grayDarkest: #131316;
     --font-primary: var(--font-be-vietnam-pro);
     --font-secondary: var(--font-manrope);
+
+    --keyframe-accordion-down: {
+        from {
+            height: 0;
+        }
+
+        to {
+            height: var(--radix-accordion-content-height);
+        }
+    }
+
+    ;
+
+    --keyframe-accordion-up: {
+        from {
+            height: var(--radix-accordion-content-height);
+        }
+
+        to {
+            height: 0;
+        }
+    }
+
+    ;
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
 }
 
 :root {
-    --background: #ffffff;
+    --background: #eef1f5;
     --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-     :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+.dark {
+    --background: #091413;
+    --foreground: #ededed;
 }
 
 @layer components {
@@ -26,6 +53,7 @@
         stroke-dasharray: 100;
         animation: dash 1s linear forwards;
     }
+
     @keyframes dash {
         to {
             stroke-dashoffset: 0;
