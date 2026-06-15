@@ -1,2 +1,9 @@
 export { default as IconHome } from "./IconHome";
 export { default as IconCourse } from "./IconCourse"
+export { default as IconOrder } from "./IconOrder"
+export { default as IconUser } from "./IconUser"
+export { default as IconComment } from "./IconComment"
+export { default as IconBook } from "./IconBook"
+export { default as IconStar } from "./IconStar"
+export { default as IconEye } from "./IconEye"
+export { default as IconLock } from "./IconLock"

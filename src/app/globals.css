@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @theme {
     --color-primary: #2C5EAD;
+    --color-grayDark: #9394A1;
+    --color-grayDarker: #212126;
+    --color-grayDarkest: #131316;
     --font-primary: var(--font-be-vietnam-pro);
     --font-secondary: var(--font-manrope);
 }

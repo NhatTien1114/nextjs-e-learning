@@ -6,7 +6,7 @@ import React from 'react'
 const page = () => {
     return (
         <>
-            <Heading>Khám phá</Heading>
+            <Heading>Khu vực học tập</Heading>
             <CourseGrid>
                 <CourseItems></CourseItems>
                 <CourseItems></CourseItems>
