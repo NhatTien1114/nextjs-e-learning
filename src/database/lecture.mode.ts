@@ -8,7 +8,7 @@ export interface ILecture extends Document<String> {
     lesson: Schema.Types.ObjectId,
     course: Schema.Types.ObjectId,
     created_at: Date,
-    _destroy: Boolean,
+    _destroy: boolean,
     order: number
 }
 

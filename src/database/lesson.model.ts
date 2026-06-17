@@ -9,7 +9,7 @@ export interface ILesson extends Document<String> {
     lectures: Schema.Types.ObjectId[],
     course: Schema.Types.ObjectId,
     type: ELessonType,
-    _destroy: Boolean,
+    _destroy: boolean,
     created_at: Date,
     duration: number,
     video_url: string,

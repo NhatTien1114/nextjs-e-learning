@@ -25,7 +25,7 @@ export interface ICourse extends Document<string> {
         }[]
     },
     lectures: Schema.Types.ObjectId[],
-    _destroy: Boolean
+    _destroy: boolean
 }
 
 const CourseSchema = new Schema<ICourse>({
