@@ -1,7 +1,7 @@
 import { ELessonType } from "@/types/enum";
 import { Document, model, models, Schema } from "mongoose";
 
-export interface ILesson extends Document<String> {
+export interface ILesson extends Document<string> {
     _id: string,
     title: string,
     slug: string,

@@ -2,7 +2,7 @@
 import { model, models, Schema } from "mongoose";
 import { Document } from "mongoose";
 
-export interface ILecture extends Document<String> {
+export interface ILecture extends Document<string> {
     _id: string,
     title: string,
     lesson: Schema.Types.ObjectId,
