@@ -15,6 +15,18 @@ const createUser = async (params: TUserParams) => {
     }
 }
 
+const getUserInfo = async ({ userId }: { userId: string }) => {
+    try {
+        await connectToDatabase();
+        const user = await User.findOne({ clerkId: userId });
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 export {
-    createUser
+    createUser,
+    getUserInfo
 };

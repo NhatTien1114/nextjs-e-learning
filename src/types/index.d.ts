@@ -17,4 +17,9 @@ type TUserParams = {
     avatar?: string
 }
 
-export { TActiveLinkProps, TMenuItems, TUserParams }
+type TCourseParams = {
+    title: string,
+    slug: string
+}
+
+export { TActiveLinkProps, TMenuItems, TUserParams, TCourseParams }
