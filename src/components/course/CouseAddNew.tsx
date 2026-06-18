@@ -66,6 +66,7 @@ function CourseAddNew({ user }: { user: IUser }) {
                 router.push(`/manage/course/update?slug=${res.data.slug}`);
             }
         } catch (error) {
+            console.log(error);
         } finally {
             setIsSubmitting(false);
             form.reset();

@@ -94,6 +94,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
             router.back();
         } catch (error) {
             toast.error("Cập nhật thất bại")
+            console.log(error);
         } finally {
             setIsSubmitting(false);
         }
