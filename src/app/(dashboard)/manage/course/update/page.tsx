@@ -1,18 +1,22 @@
 import Heading from "@/components/typography/Heading";
 import CourseUpdate from "@/components/course/CourseUpdate";
+import { getCourseBySlug } from "@/lib/action/course.action";
 
 const page = async ({
     searchParams,
 }: {
-    searchParams: Promise<{
+    searchParams: {
         slug: string;
-    }>;
+    };
 }) => {
-    // const { slug } = await searchParams; // Wait until we actually need slug
+    const findCourse = await getCourseBySlug({
+        slug: searchParams.slug,
+    });
+    if (!findCourse) return null;
     return (
         <>
             <Heading>Cập nhật khóa học</Heading>
-            <CourseUpdate></CourseUpdate>
+            <CourseUpdate data={JSON.parse(JSON.stringify(findCourse))}></CourseUpdate>
         </>
     );
 };

@@ -1,7 +1,8 @@
 import { EUserRole, EUserStatus } from "@/types/enum";
 import { Document, model, models, Schema } from "mongoose";
 
-interface IUser extends Document {
+export interface IUser extends Document<string> {
+    _id: string,
     clerkId: string,
     name: string,
     username: string,

@@ -44,12 +44,12 @@ const CourseSchema = new Schema<ICourse>({
     views: { type: Number, default: 0 },
     rating: { type: [String], default: [] },
     info: {
-        requirement: { type: [String], default: [] },
-        benefit: { type: [String], default: [] },
-        qa: {
+        requirement: { type: [String] },
+        benefit: { type: [String] },
+        qa: [{
             question: { type: String },
             answer: { type: String },
-        }
+        }]
     },
     lectures: [{ type: Schema.Types.ObjectId, ref: "Lecture" }],
     _destroy: { type: Boolean, default: false },
