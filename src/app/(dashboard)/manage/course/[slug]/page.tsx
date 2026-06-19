@@ -4,27 +4,33 @@ import { Button } from "@/components/ui/button";
 import { getCourseBySlug } from "@/lib/action/course.action";
 import Image from "next/image";
 
-const page = async ({
-    params,
-}: {
-    params: {
-        slug: string;
-    };
-}) => {
-    const data = await getCourseBySlug({
-        slug: params.slug,
-    });
+const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
+    const { slug } = await params;
+    const data = await getCourseBySlug({ slug });
     if (!data) return null;
+
+    const split = data.intro_url.split("be/")[1];
     return (
         <div className="grid lg:grid-cols-[2fr_1fr] gap-10 min-h-screen p-5">
             <div>
                 <div className="relative aspect-video mb-5">
-                    <Image
-                        src="https://images.unsplash.com/photo-1716881763995-097b7a68ea3d?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        alt=""
-                        fill
-                        className="w-full h-full object-cover rounded-lg"
-                    />
+                    {data.intro_url ?
+                        <iframe width="853"
+                            height="480"
+                            src={`https://www.youtube.com/embed/${split}`}
+                            title="SPIDER-MAN: BRAND NEW DAY – New Trailer"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            className="h-full w-full object-fill rounded-lg"
+                        ></iframe>
+                        :
+                        <Image
+                            src="https://images.unsplash.com/photo-1716881763995-097b7a68ea3d?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt=""
+                            fill
+                            className="w-full h-full object-cover rounded-lg"
+                        />
+                    }
+
                 </div>
                 <h1 className="font-bold text-3xl mb-5">{data?.title}</h1>
                 <BoxSection title="Mô tả">
@@ -40,12 +46,48 @@ const page = async ({
                 </BoxSection>
                 <BoxSection title="Yêu cầu">
                     {data.info.requirement.map((r, index) => (
-                        <div key={index}>{r}</div>
+                        <div key={index} className="mb-3 flex items-center gap-2">
+                            <span className="flex-shrink-0 size-5 bg-primary text-white p-1 rounded flex items-center justify-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M4.5 12.75l6 6 9-13.5"
+                                    />
+                                </svg>
+                            </span>
+                            <span>{r}</span>
+                        </div>
                     ))}
                 </BoxSection>
                 <BoxSection title="Lợi ích">
                     {data.info.benefit.map((r, index) => (
-                        <div key={index}>{r}</div>
+                        <div className="mb-3 flex items-center gap-2">
+                            <span className="flex-shrink-0 size-5 bg-primary text-white p-1 rounded flex items-center justify-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M4.5 12.75l6 6 9-13.5"
+                                    />
+                                </svg>
+                            </span>
+                            <span>{r}</span>
+                        </div>
                     ))}
                 </BoxSection>
                 <BoxSection title="Q.A">

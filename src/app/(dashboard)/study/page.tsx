@@ -7,6 +7,7 @@ import React from 'react'
 
 const page = async () => {
     const course = await getAllCourse();
+    if (!course) return null;
     return (
         <>
             <Heading>Khu vực học tập</Heading>

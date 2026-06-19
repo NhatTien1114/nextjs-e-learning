@@ -5,12 +5,13 @@ import { getCourseBySlug } from "@/lib/action/course.action";
 const page = async ({
     searchParams,
 }: {
-    searchParams: {
+    searchParams: Promise<{
         slug: string;
-    };
+    }>;
 }) => {
+    const { slug } = await searchParams;
     const findCourse = await getCourseBySlug({
-        slug: searchParams.slug,
+        slug: slug,
     });
     if (!findCourse) return null;
     return (

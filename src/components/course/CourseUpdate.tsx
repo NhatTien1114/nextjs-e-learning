@@ -21,7 +21,8 @@ import { useRouter } from "next/navigation";
 import { ECourseLevel, ECourseStatus } from "@/types/enum";
 import { Textarea } from "../ui/textarea";
 import { ICourse } from "@/database/course.model";
-
+import IconAdd from "../icons/IconAdd";
+import { useImmer } from "use-immer"
 const formSchema = z.object({
     title: z.string().min(10, {
         message: "Tên khóa học ít nhất 10 ký tự",
@@ -50,6 +51,11 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
     // 1. Define your form.
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [addProperties, setAddProperties] = useImmer({
+        requirement: data.info.requirement,
+        benefit: data.info.benefit,
+        qa: data.info.qa,
+    })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -87,6 +93,13 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                     image: values.image,
                     intro_url: values.intro_url,
                     views: values.views,
+                    status: values.status,
+                    level: values.level,
+                    info: {
+                        requirement: addProperties.requirement,
+                        benefit: addProperties.benefit,
+                        qa: addProperties.qa,
+                    },
                 }
             })
             if (!res?.success) return toast.error(res?.message)
@@ -103,7 +116,6 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-5 p-5">
                 <div className="grid grid-cols-2 gap-4">
-
                     <FormField
                         control={form.control}
                         name="title"
@@ -210,6 +222,179 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                                 <FormLabel>Lượt xem</FormLabel>
                                 <FormControl>
                                     <Input className="disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-muted" disabled placeholder="0" type="number" {...field} />
+                                </FormControl>
+                                <FormMessage className="dark:text-red-700 text-xs" />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Trạng thái</FormLabel>
+                                <FormControl>
+                                    <div></div>
+                                </FormControl>
+                                <FormMessage className="dark:text-red-700 text-xs" />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="level"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Trình độ</FormLabel>
+                                <FormControl>
+                                    <div></div>
+                                </FormControl>
+                                <FormMessage className="dark:text-red-700 text-xs" />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Form Yêu cầu */}
+                    <FormField
+                        control={form.control}
+                        name="info.requirement"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex justify-between items-center gap-5">
+                                    <span>Yêu cầu</span>
+                                    <button
+                                        onClick={() => {
+                                            setAddProperties((draft) => {
+                                                draft.requirement.push("");
+                                            })
+                                        }}
+                                        className="text-primary hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+                                        type="button">
+                                        <IconAdd />
+                                    </button>
+                                </FormLabel>
+                                <FormControl>
+                                    <div className="flex flex-col gap-2">
+                                        {addProperties.requirement.map((item, index) => (
+                                            <Input
+                                                key={index}
+                                                placeholder={`Yêu cầu số ${index + 1}`}
+                                                value={item}
+                                                onChange={(e) => {
+                                                    setAddProperties((draft) => {
+                                                        draft.requirement[index] = e.target.value;
+                                                    })
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </FormControl>
+                                <FormMessage className="dark:text-red-700 text-xs" />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Form Lợi ích */}
+                    <FormField
+                        control={form.control}
+                        name="info.benefit"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="flex justify-between items-center gap-5">
+                                    <span>Lợi ích</span>
+                                    <button
+                                        type="button"
+                                        className="text-primary hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+                                        onClick={(e) => {
+                                            setAddProperties((draft) => {
+                                                draft.benefit.push("");
+                                            })
+                                        }}
+                                    ><IconAdd></IconAdd></button>
+                                </FormLabel>
+                                <FormControl>
+                                    <div className="flex flex-col gap-2">
+                                        {addProperties.benefit.map((item, index) => (
+                                            <Input
+                                                key={index}
+                                                placeholder={`Lợi ích số ${index + 1}`}
+                                                value={item}
+                                                onChange={(e) => {
+                                                    setAddProperties((draft) => {
+                                                        draft.benefit[index] = e.target.value;
+                                                    })
+                                                }}
+                                            />
+                                        ))}
+                                        {/* <button
+                                            type="button"
+                                            className="text-primary hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+                                            onClick={(e) => {
+                                                setAddProperties((draft) => {
+                                                    draft.benefit.pop()
+                                                })
+                                            }}
+                                        >
+                                            <IconAdd></IconAdd>
+                                        </button> */}
+                                    </div>
+                                </FormControl>
+                                <FormMessage className="dark:text-red-700 text-xs" />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="info.qa"
+                        render={({ field }) => (
+                            <FormItem className="col-start-1 col-end-3">
+                                <FormLabel className="flex justify-between items-center gap-5">
+                                    <span>Q.A</span>
+                                    <button
+                                        type="button"
+                                        className="text-primary hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+                                        onClick={(e) => {
+                                            setAddProperties((draft) => {
+                                                draft.qa.push({ question: "", answer: "" })
+                                            })
+                                        }}
+                                    >
+                                        <IconAdd></IconAdd>
+                                    </button>
+                                </FormLabel>
+                                <FormControl>
+                                    <div className="grid grid-cols-2 gap-5">
+                                        {addProperties.qa.map((item, index) => {
+                                            return (
+                                                <>
+                                                    <Input
+                                                        key={index}
+                                                        placeholder={`Câu hỏi số ${index + 1}`}
+                                                        value={item.question}
+                                                        onChange={(e) => {
+                                                            setAddProperties((draft) => {
+                                                                draft.qa[index].question = e.target.value;
+                                                            })
+                                                        }}
+                                                    />
+                                                    <Input
+                                                        key={index}
+                                                        placeholder={`Trả lời câu hỏi số ${index + 1}`}
+                                                        value={item.answer}
+                                                        onChange={(e) => {
+                                                            setAddProperties((draft) => {
+                                                                draft.qa[index].answer = e.target.value;
+                                                            })
+                                                        }}
+                                                    />
+                                                </>
+                                            )
+                                        }
+                                        )}
+                                    </div>
                                 </FormControl>
                                 <FormMessage className="dark:text-red-700 text-xs" />
                             </FormItem>
