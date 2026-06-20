@@ -23,6 +23,18 @@ import { Textarea } from "../ui/textarea";
 import { ICourse } from "@/database/course.model";
 import IconAdd from "../icons/IconAdd";
 import { useImmer } from "use-immer"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { courseLevel, courseStatus } from "@/constants";
+import { UploadButton } from "@/utils/uploadthing";
+import Image from "next/image";
 const formSchema = z.object({
     title: z.string().min(10, {
         message: "Tên khóa học ít nhất 10 ký tự",
@@ -56,6 +68,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
         benefit: data.info.benefit,
         qa: data.info.qa,
     })
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -104,7 +117,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
             })
             if (!res?.success) return toast.error(res?.message)
             toast.success(res?.message)
-            router.back();
+            router.push(`/manage/course/update?slug=${data.slug}`);
         } catch (error) {
             toast.error("Cập nhật thất bại")
             console.log(error);
@@ -112,6 +125,8 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
             setIsSubmitting(false);
         }
     }
+
+    const imageWatch = form.watch('image');
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-5 p-5">
@@ -193,7 +208,39 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                             <FormItem>
                                 <FormLabel>Thumbnail</FormLabel>
                                 <FormControl>
-                                    <div className="flex outline-none h-40 rounded-md font-medium px-3 w-full text-sm border border-gray-200 focus:!border-primary transition-all dark:border/10 bg-white dark:bg-grayDarker"></div>
+                                    <div className="flex justify-center outline-none h-40 rounded-md font-medium px-3 w-full text-sm border border-gray-200 focus:!border-primary transition-all dark:border/10 bg-white dark:bg-grayDarker relative">
+                                        {!imageWatch ? (
+                                            <UploadButton
+                                                endpoint="imageUploader"
+                                                onClientUploadComplete={(res) => {
+                                                    // Do something with the response
+                                                    console.log("Files: ", res);
+                                                    form.setValue("image", res[0].ufsUrl);
+                                                }}
+                                                onUploadError={(error: Error) => {
+                                                    // Do something with the error.
+                                                    console.error(`ERROR! ${error.message}`);
+                                                }}
+                                            />
+                                        ) : (
+                                            <div className="relative w-full h-full">
+                                                <Image
+                                                    alt="Thumbnail"
+                                                    src={imageWatch}
+                                                    fill
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    className="absolute top-2 right-2 h-8 px-3"
+                                                    onClick={() => form.setValue("image", "")}
+                                                >
+                                                    Xóa
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </FormControl>
                                 <FormMessage className="dark:text-red-700 text-xs" />
                             </FormItem>
@@ -235,7 +282,22 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                             <FormItem>
                                 <FormLabel>Trạng thái</FormLabel>
                                 <FormControl>
-                                    <div></div>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                        <SelectTrigger className="bg-white dark:bg-grayDarker w-full border border-gray-200 hover:border-primary/70 transition-all">
+                                            <SelectValue placeholder="Trạng thái" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white dark:bg-grayDarker w-full">
+                                            <SelectGroup>
+                                                {
+                                                    courseStatus.map((item) => {
+                                                        return (
+                                                            <SelectItem key={item.value} value={item.value}>{item.title}</SelectItem>
+                                                        )
+                                                    })
+                                                }
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage className="dark:text-red-700 text-xs" />
                             </FormItem>
@@ -249,7 +311,22 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                             <FormItem>
                                 <FormLabel>Trình độ</FormLabel>
                                 <FormControl>
-                                    <div></div>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                        <SelectTrigger className="bg-white dark:bg-grayDarker w-full border-gray-200 hover:border-primary/70 transition-all">
+                                            <SelectValue placeholder="Trình độ" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white dark:bg-grayDarker w-full">
+                                            <SelectGroup>
+                                                {
+                                                    courseLevel.map((item) => {
+                                                        return (
+                                                            <SelectItem key={item.value} value={item.value}>{item.title}</SelectItem>
+                                                        )
+                                                    })
+                                                }
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
                                 </FormControl>
                                 <FormMessage className="dark:text-red-700 text-xs" />
                             </FormItem>
@@ -406,7 +483,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                     isLoading={isSubmitting}
                     variant="primary"
                     type="submit"
-                    className="w-[150px]"
+                    className="w-[160px]"
                     disabled={isSubmitting}
                 >
                     Cập nhật khóa học
