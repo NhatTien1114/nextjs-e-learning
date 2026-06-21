@@ -28,5 +28,6 @@ type TCourseParams = {
 type TCourseUpdateParams = {
     slug: string,
     updateData: Partiel<ICourse>
+    path?: string
 }
 export { TActiveLinkProps, TMenuItems, TUserParams, TCourseParams, TCourseUpdateParams }

@@ -1,3 +1,4 @@
+"use client";
 import React from 'react'
 
 import {
@@ -13,16 +14,76 @@ import {
 import Image from 'next/image'
 import { commonClassNames, courseStatus } from '@/constants'
 import { ECourseStatus } from '@/types/enum'
-import { getAllCourse } from '@/lib/action/course.action'
+import { getAllCourse, updateCourse } from '@/lib/action/course.action'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { IconBook, IconEye } from '../icons'
 import IconEdit from '../icons/IconEdit'
 import IconDelete from '../icons/IconDelete'
+import { ICourse } from '@/database/course.model'
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
+import IconLeftArrow from '../icons/IconLeftArrow';
+import IconRightArrow from '../icons/IconRightArrow';
 
-const CourseManage = async () => {
-    const courses = await getAllCourse();
-    console.log(courses)
+const CourseManage = async ({ courses }: { courses: ICourse[] }) => {
+    const handelDeleteCourse = async (slug: string) => {
+        try {
+            Swal.fire({
+                title: "Bạn có chắc chắn xóa?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Đồng ý"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await updateCourse({
+                        slug,
+                        updateData: {
+                            status: ECourseStatus.PENDING,
+                            _destroy: true
+                        },
+                        path: "/manage/course"
+                    })
+                    toast.success("Xóa khóa học thành công")
+                }
+            });
+        } catch (error) {
+            toast.error("Xóa khóa học thất bại")
+            console.log(error);
+        }
+    }
+
+    const handleChangeStatus = async (slug: string, status: ECourseStatus) => {
+        try {
+            Swal.fire({
+                title: "Bạn có chắc chắn cập nhật?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Cập nhật"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await updateCourse({
+                        slug,
+                        updateData: {
+                            status: status === ECourseStatus.PENDING ? ECourseStatus.APPROVED : ECourseStatus.PENDING,
+                            _destroy: false
+                        },
+                        path: "/manage/course"
+                    })
+                    toast.success("Cập nhật trạng thái thành công")
+                }
+            });
+        } catch (error) {
+            toast.error("Cập nhật trạng thái khóa học thất bại")
+            console.log(error);
+        }
+    }
     return (
         <>
             <Table>
@@ -57,13 +118,15 @@ const CourseManage = async () => {
                                 </span>
                             </TableCell>
                             <TableCell>
-                                <span
+                                <button
+                                    type='button'
+                                    onClick={() => { handleChangeStatus(course.slug, course.status) }}
                                     className={cn(
                                         commonClassNames.status,
                                         courseStatus.find((item) => item.value === course.status)?.className
                                     )}>
                                     {courseStatus.find((item) => item.value === course.status)?.title}
-                                </span>
+                                </button>
                             </TableCell>
                             <TableCell>
                                 <div className="flex gap-3">
@@ -86,7 +149,9 @@ const CourseManage = async () => {
                                     >
                                         <IconEdit />
                                     </Link>
-                                    <button className={commonClassNames.action}>
+                                    <button
+                                        onClick={() => handelDeleteCourse(course.slug)}
+                                        className={commonClassNames.action}>
                                         <IconDelete />
                                     </button>
                                 </div>
@@ -95,6 +160,14 @@ const CourseManage = async () => {
                     ))}
                 </TableBody>
             </Table>
+            <div className="flex justify-end gap-3 mt-5">
+                <button className={commonClassNames.paginationButton}>
+                    <IconLeftArrow />
+                </button>
+                <button className={commonClassNames.paginationButton}>
+                    <IconRightArrow />
+                </button>
+            </div>
         </>
     )
 }

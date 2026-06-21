@@ -57,7 +57,10 @@ export const updateCourse = async (params: TCourseUpdateParams) => {
         await Course.findOneAndUpdate({ slug: params.slug }, params.updateData, {
             new: true
         })
-        revalidatePath("/");
+        if (params.path) {
+            revalidatePath(params.path);
+        }
+        revalidatePath("/")
         return {
             success: true,
             message: "Cập nhật thành công"

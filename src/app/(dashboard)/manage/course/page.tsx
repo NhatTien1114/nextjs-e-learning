@@ -8,6 +8,7 @@ import Link from 'next/link'
 import React from 'react'
 
 const page = async () => {
+    const courses = await getAllCourse();
     return (
         <div>
             <div className="flex justify-between items-center">
@@ -22,8 +23,11 @@ const page = async () => {
                 </Link>
             </div>
             <div className="m-5">
-                <CourseManage></CourseManage>
+                <CourseManage
+                    courses={courses ? JSON.parse(JSON.stringify(courses)) : []}
+                ></CourseManage>
             </div>
+
 
         </div>
     )
