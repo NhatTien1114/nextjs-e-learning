@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 
@@ -126,7 +126,10 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
         }
     }
 
-    const imageWatch = form.watch('image');
+    const imageWatch = useWatch({
+        control: form.control,
+        name: 'image'
+    });
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-5 p-5">

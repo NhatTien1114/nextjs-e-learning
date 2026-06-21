@@ -70,7 +70,7 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                 </BoxSection>
                 <BoxSection title="Lợi ích">
                     {data.info.benefit.map((r, index) => (
-                        <div className="mb-3 flex items-center gap-2">
+                        <div key={index} className="mb-3 flex items-center gap-2">
                             <span className="flex-shrink-0 size-5 bg-primary text-white p-1 rounded flex items-center justify-center">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
