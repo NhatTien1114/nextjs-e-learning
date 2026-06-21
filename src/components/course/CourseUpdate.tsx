@@ -117,7 +117,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
             })
             if (!res?.success) return toast.error(res?.message)
             toast.success(res?.message)
-            router.push(`/manage/course/update?slug=${data.slug}`);
+            router.replace(`/manage/course`);
         } catch (error) {
             toast.error("Cập nhật thất bại")
             console.log(error);
@@ -483,7 +483,7 @@ const CourseUpdate = ({ data }: { data: ICourse }) => {
                     isLoading={isSubmitting}
                     variant="primary"
                     type="submit"
-                    className="w-[160px]"
+                    className="w-[170px]"
                     disabled={isSubmitting}
                 >
                     Cập nhật khóa học

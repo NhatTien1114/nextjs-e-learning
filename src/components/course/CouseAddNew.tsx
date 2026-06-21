@@ -63,7 +63,7 @@ function CourseAddNew({ user }: { user: IUser }) {
             }
             toast.success("Tạo khóa học thành công");
             if (res?.data) {
-                router.push(`/manage/course/update?slug=${res.data.slug}`);
+                router.push(`/manage/course`);
             }
         } catch (error) {
             console.log(error);

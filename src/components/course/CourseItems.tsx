@@ -25,8 +25,8 @@ const CourseItems = ({ data }: { data: ICourse }) => {
         <div className="bg-white dark:bg-grayDarker dark:border-grayDark/50 border border-gray-200 p-4 rounded-2xl flex flex-col">
             <Link href={`/manage/course/${data.slug}`} className="block h-[180px] relative shrink-0">
                 <Image
-                    src="https://images.unsplash.com/photo-1780840918404-2033f4ff6d3b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt=""
+                    src={data.image}
+                    alt={data.title}
                     width={600}
                     height={400}
                     className="h-full w-full object-cover rounded-lg"

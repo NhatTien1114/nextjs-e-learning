@@ -38,20 +38,27 @@ export const menuItems: {
         }
     ]
 
-export const courseStatus = [
-    {
-        title: "Đã duyệt",
-        value: ECourseStatus.APPROVED,
-    },
-    {
-        title: "Chờ duyệt",
-        value: ECourseStatus.PENDING,
-    },
-    {
-        title: "Không phê duyệt",
-        value: ECourseStatus.REJECT,
-    }
-]
+export const courseStatus: {
+    title: string,
+    value: ECourseStatus,
+    className?: string
+}[] = [
+        {
+            title: "Đã duyệt",
+            value: ECourseStatus.APPROVED,
+            className: "text-green-500 bg-green-500/10",
+        },
+        {
+            title: "Chờ duyệt",
+            value: ECourseStatus.PENDING,
+            className: "text-orange-500 bg-orange-500/10",
+        },
+        {
+            title: "Không phê duyệt",
+            value: ECourseStatus.REJECT,
+            className: "text-red-500 bg-red-500/10",
+        }
+    ]
 
 export const courseLevel = [
     {
@@ -73,3 +80,10 @@ export const courseLevelDisplay: Record<ECourseLevel, string> = {
     [ECourseLevel.INTERMEDIATE]: "Trung bình",
     [ECourseLevel.ADVANCED]: "Khó",
 }
+
+export const commonClassNames = {
+    status:
+        "border border-current rounded-md font-medium px-3 py-1 text-xs",
+    action:
+        "size-8 rounded-md border flex items-center justify-center p-2 text-gray-500 hover:border-gray-500/80 dark:bg-transparent dark:border-gray-200/10 dark:hover:border-gray-200/20",
+};
