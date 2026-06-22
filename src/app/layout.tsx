@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "./globals.scss";
 import { beVNPro } from "@/utils";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Geist } from "next/font/google";

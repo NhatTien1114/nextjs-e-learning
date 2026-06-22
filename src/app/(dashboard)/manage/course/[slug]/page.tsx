@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 import { courseLevelDisplay } from "@/constants";
 import { getCourseBySlug } from "@/lib/action/course.action";
 import Image from "next/image";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
     const { slug } = await params;
@@ -92,12 +98,18 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                     ))}
                 </BoxSection>
                 <BoxSection title="Q.A">
-                    {Array.isArray(data.info?.qa) && data.info.qa.map((qa: { question: string; answer: string }, index: number) => (
-                        <div key={index}>
-                            <div>{qa.question}</div>
-                            <div>{qa.answer}</div>
-                        </div>
-                    ))}
+                    {Array.isArray(data.info?.qa) && data.info.qa.length > 0 && (
+                        <Accordion type="single" collapsible className="w-full">
+                            {data.info.qa.map((qa: { question: string; answer: string }, index: number) => (
+                                <AccordionItem key={index} value={`item-${index}`}>
+                                    <AccordionTrigger>{qa.question}</AccordionTrigger>
+                                    <AccordionContent>
+                                        {qa.answer}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    )}
                 </BoxSection>
             </div>
             <div>

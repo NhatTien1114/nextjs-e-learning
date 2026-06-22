@@ -86,7 +86,26 @@ const CourseManage = async ({ courses }: { courses: ICourse[] }) => {
     }
     return (
         <>
-            <Table>
+            <Link
+                href="/manage/course/new"
+                className="size-10 rounded-full bg-primary flex justify-center items-center text-white fixed right-5 bottom-5 animate-bounce"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                </svg>
+            </Link>
+            <Table className="table-responsive">
                 <TableHeader>
                     <TableRow>
                         <TableHead>Thông tin</TableHead>
@@ -107,13 +126,19 @@ const CourseManage = async ({ courses }: { courses: ICourse[] }) => {
                                         height={60}
                                         className="rounded-md object-cover flex-shrink-0"
                                     />
-                                    <div className="font-medium text-sm">
-                                        {course.title}
+                                    <div className="grid gap-2">
+                                        <h3 className="font-bold text-sm lg:text-base whitespace-nowrap">
+                                            {course.title}
+                                        </h3>
+                                        <h4 className="text-xs lg:text-sm text-slate-500">
+                                            {new Date(course.created_at).toLocaleDateString('vi-VN')}
+                                        </h4>
                                     </div>
+
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <span className="font-semibold">
+                                <span className="font-bold text-sm lg:text-base">
                                     {course.price ? `${course.price.toLocaleString('vi-VN')}đ` : 'Miễn phí'}
                                 </span>
                             </TableCell>

@@ -16,7 +16,7 @@ const page = async () => {
                     Quản lý khóa học
                 </Heading>
                 <Link href="/manage/course/create">
-                    <Button className="text-white bg-primary hover:bg-primary/80 cursor-pointer gap-2 mt-5 mr-2">
+                    <Button className="text-white bg-primary hover:bg-primary/80 cursor-pointer gap-2 mt-5 mr-5">
                         <PlusIcon />
                         Thêm khóa học
                     </Button>

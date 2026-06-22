@@ -16,11 +16,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
                  */
                 routerConfig={extractRouterConfig(ourFileRouter)}
             />
-            <div className="wrapper grid lg:grid-cols-[300px_minmax(0,1fr)] h-screen">
-                <div className="sticky top-0">
-                    <Sidebar />
-                </div>
-                <main className="bg-gray-200 dark:bg-grayDarkest">{children}</main>
+            <div className="wrapper block lg:grid lg:grid-cols-[300px_minmax(0,1fr)] h-screen">
+                <Sidebar />
+                <main className="bg-gray-200 dark:bg-grayDarkest pb-20 lg:pb-0 h-full overflow-y-auto">{children}</main>
             </div>
         </div>
     )
