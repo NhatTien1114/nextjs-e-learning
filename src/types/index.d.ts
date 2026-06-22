@@ -31,4 +31,9 @@ type TCourseUpdateParams = {
     updateData: Partiel<ICourse>
     path?: string
 }
+
+type TCourseContent = {
+    course: string,
+
+}
 export { TActiveLinkProps, TMenuItems, TUserParams, TCourseParams, TCourseUpdateParams }

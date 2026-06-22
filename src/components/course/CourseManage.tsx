@@ -169,7 +169,7 @@ const CourseManage = async ({ courses }: { courses: ICourse[] }) => {
                                         <IconEye />
                                     </Link>
                                     <Link
-                                        href=""
+                                        href={`/manage/course/course-content?slug=${course.slug}`}
                                         className={commonClassNames.action}
                                     >
                                         <IconEdit />
