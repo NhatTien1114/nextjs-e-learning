@@ -2,7 +2,7 @@
 import Course from "@/database/course.model";
 import { connectToDatabase } from "../mongoose"
 import Lecture from "@/database/lecture.mode";
-import { TCreateLectureParams } from "@/types";
+import { TCreateLectureParams, TUpdateLectureParams } from "@/types";
 import { revalidatePath } from "next/cache";
 
 import { Types } from "mongoose";
@@ -28,6 +28,26 @@ export const createLectures = async (params: TCreateLectureParams) => {
         return {
             success: false,
             message: 'Create lecture failed',
+        };
+    }
+}
+
+export const updateLectures = async (params: TUpdateLectureParams) => {
+    try {
+        await connectToDatabase();
+        await Lecture.findByIdAndUpdate(params.lectureId, params.updateData, {
+            new: true
+        });
+        revalidatePath(params.path || "/");
+        return {
+            success: true,
+            message: 'Cập nhật bài học thành công',
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            success: false,
+            message: 'Update lecture failed',
         };
     }
 }

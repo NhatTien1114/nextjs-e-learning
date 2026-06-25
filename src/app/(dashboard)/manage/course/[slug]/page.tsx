@@ -10,13 +10,15 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
+import { ILecture } from "@/database/lecture.mode";
 
 const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
     const { slug } = await params;
     const data = await getCourseBySlug({ slug });
     if (!data) return null;
 
-    const split = data.intro_url.split("be/")[1];
+    const split = data.intro_url?.split("be/")[1];
+    const lectures = data.lectures || [];
     return (
         <div className="grid lg:grid-cols-[2fr_1fr] gap-10 min-h-screen p-5">
             <div>
@@ -49,6 +51,27 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                         <BoxInfo title="Lượt xem">100</BoxInfo>
                         <BoxInfo title="Trình độ">{courseLevelDisplay[data.level]}</BoxInfo>
                         <BoxInfo title="Thời lượng">100</BoxInfo>
+                    </div>
+                </BoxSection>
+                <BoxSection title="Nội dung khóa học">
+                    <div className="flex flex-col gap-5">
+                        {lectures.map((lecture: ILecture) => (
+                            <Accordion
+                                type="single"
+                                collapsible
+                                className="w-full"
+                                key={lecture._id}
+                            >
+                                <AccordionItem value={lecture._id}>
+                                    <AccordionTrigger>
+                                        <div className="flex items-center gap-3 justify-between w-full pr-5">
+                                            <div>{lecture.title}</div>
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent></AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
+                        ))}
                     </div>
                 </BoxSection>
                 <BoxSection title="Yêu cầu">
