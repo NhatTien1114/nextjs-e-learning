@@ -10,7 +10,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
-import { ILecture } from "@/database/lecture.mode";
+import { TUpdateCourseLecture } from "@/types";
 
 const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
     const { slug } = await params;
@@ -55,7 +55,7 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                 </BoxSection>
                 <BoxSection title="Nội dung khóa học">
                     <div className="flex flex-col gap-5">
-                        {lectures.map((lecture: ILecture) => (
+                        {lectures.map((lecture: TUpdateCourseLecture) => (
                             <Accordion
                                 type="single"
                                 collapsible

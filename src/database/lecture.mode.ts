@@ -5,7 +5,7 @@ import { Document } from "mongoose";
 export interface ILecture extends Document<string> {
     _id: string,
     title: string,
-    lesson: Schema.Types.ObjectId,
+    lessons: Schema.Types.ObjectId[],
     course: Schema.Types.ObjectId,
     created_at: Date,
     _destroy: boolean,
@@ -15,7 +15,7 @@ export interface ILecture extends Document<string> {
 const LectureSchema = new Schema<ILecture>({
     _id: { type: String },
     title: { type: String, required: true },
-    lesson: { type: Schema.Types.ObjectId, ref: "Lesson" },
+    lessons: [{ type: Schema.Types.ObjectId, ref: "Lesson" }],
     course: { type: Schema.Types.ObjectId, ref: "Course" },
     created_at: { type: Date, default: Date.now },
     _destroy: { type: Boolean, default: false },

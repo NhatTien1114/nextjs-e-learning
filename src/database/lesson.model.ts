@@ -19,7 +19,7 @@ export interface ILesson extends Document<string> {
 const LessonSchema = new Schema<ILesson>({
     _id: { type: String },
     title: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
+    slug: { type: String },
     order: { type: Number, default: 0 },
     lectures: { type: [String], default: [] },
     course: { type: String, required: true },

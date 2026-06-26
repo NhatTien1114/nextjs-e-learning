@@ -6,6 +6,7 @@ import Course, { ICourse } from "@/database/course.model";
 import { TCourseParams, TCourseUpdateParams, TUpdateCourseParams } from "@/types";
 import { Types } from "mongoose";
 import { revalidatePath } from "next/cache";
+import Lesson from "@/database/lesson.model";
 
 export async function getCourseBySlug({ slug }: { slug: string }): Promise<TUpdateCourseParams | undefined> {
     try {
@@ -16,7 +17,14 @@ export async function getCourseBySlug({ slug }: { slug: string }): Promise<TUpda
             select: "_id title",
             match: {
                 _destroy: false
-            }
+            },
+            populate: {
+                path: "lessons",
+                model: Lesson,
+                match: {
+                    _destroy: false,
+                },
+            },
         });
         return findCourse;
     } catch (error) {

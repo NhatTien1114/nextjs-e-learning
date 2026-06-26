@@ -1,5 +1,6 @@
 import { ICourse } from "@/database/course.model";
 import { ILecture } from "@/database/lecture.mode";
+import { ILesson } from "@/database/lesson.model";
 
 type TActiveLinkProps = {
     url: string;
@@ -34,7 +35,7 @@ type TCourseUpdateParams = {
 }
 
 interface TUpdateCourseParams extends Omit<ICourse, "lectures"> {
-    lectures?: ILecture[];
+    lectures?: TUpdateCourseLecture[];
 };
 
 type TCreateLectureParams = {
@@ -50,4 +51,30 @@ type TUpdateLectureParams = {
     path?: string
 }
 
-export { TActiveLinkProps, TMenuItems, TUserParams, TCourseParams, TCourseUpdateParams, TCreateLectureParams, TUpdateLectureParams, TUpdateCourseParams }
+type TCreateLessonParams = {
+    lecture: string,
+    course: string,
+    title?: string,
+    order?: number,
+    path?: string,
+    slug?: string
+}
+
+type TUpdateCourseLecture = {
+    _id: string;
+    title: string;
+    lessons: ILesson[];
+};
+
+type TUpdateLessonParams = {
+    lessonId: string,
+    updateData: Partial<ILesson>,
+    path?: string,
+}
+
+export {
+    TActiveLinkProps, TMenuItems, TUserParams,
+    TCourseParams, TCourseUpdateParams, TCreateLectureParams,
+    TUpdateLectureParams, TUpdateCourseParams, TCreateLessonParams,
+    TUpdateCourseLecture, TUpdateLessonParams
+}

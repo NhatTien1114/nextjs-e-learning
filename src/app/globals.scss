@@ -10,31 +10,26 @@
     --font-primary: var(--font-be-vietnam-pro);
     --font-secondary: var(--font-manrope);
 
-    --keyframe-accordion-down: {
-        from {
-            height: 0;
-        }
-
-        to {
-            height: var(--radix-accordion-content-height);
-        }
-    }
-
-    ;
-
-    --keyframe-accordion-up: {
-        from {
-            height: var(--radix-accordion-content-height);
-        }
-
-        to {
-            height: 0;
-        }
-    }
-
-    ;
     --animate-accordion-down: accordion-down 0.2s ease-out;
     --animate-accordion-up: accordion-up 0.2s ease-out;
+
+    @keyframes accordion-down {
+        from {
+            height: 0;
+        }
+        to {
+            height: var(--radix-accordion-content-height);
+        }
+    }
+
+    @keyframes accordion-up {
+        from {
+            height: var(--radix-accordion-content-height);
+        }
+        to {
+            height: 0;
+        }
+    }
 }
 
 :root {
@@ -218,4 +213,23 @@
     flex-direction: column !important;
     align-items: center !important;
     gap: 0.25rem !important;
+}
+
+@layer utilities {
+    .flexCenter {
+        @apply flex items-center justify-center;
+    }
+    .bgDarkMode {
+        @apply bg-white dark:bg-grayDarker;
+    }
+    .borderDarkMode {
+        /* Đã cập nhật cú pháp opacity cho Tailwind v4 */
+        @apply border-gray-200 dark:border-white/10;
+    }
+    .focus-primary {
+        @apply focus:ring-4 focus:ring-primary focus:ring-primary/10;
+    }
+    .skeleton {
+        @apply bg-gray-200 dark:bg-grayDarker animate-pulse;
+    }
 }
