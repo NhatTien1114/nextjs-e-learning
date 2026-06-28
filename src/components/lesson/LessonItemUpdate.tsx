@@ -4,6 +4,7 @@ import { ILesson } from "@/database/lesson.model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Editor } from '@tinymce/tinymce-react';
 
 import {
     FormControl,
@@ -17,6 +18,9 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { Button } from "../ui/button";
 import { updateLessons } from "@/lib/action/lesson.action";
+import { editorOptions } from "@/constants";
+import { useTheme } from "next-themes";
+import { useRef } from "react";
 
 const formSchema = z.object({
     slug: z.string().optional(),
@@ -26,6 +30,8 @@ const formSchema = z.object({
 });
 
 const LessonItemUpdate = ({ lesson }: { lesson: ILesson }) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const editorRef = useRef<any>(null);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -50,6 +56,8 @@ const LessonItemUpdate = ({ lesson }: { lesson: ILesson }) => {
         } finally {
         }
     }
+
+    const { theme } = useTheme();
     return (
         <div>
             <Form {...form}>
@@ -106,15 +114,26 @@ const LessonItemUpdate = ({ lesson }: { lesson: ILesson }) => {
                             control={form.control}
                             name="content"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="col-start-1 col-end-3">
                                     <FormLabel>Nội dung</FormLabel>
-                                    <FormControl></FormControl>
+                                    <FormControl>
+                                        <Editor
+                                            apiKey={process.env.NEXT_PUBLIC_TINY_MCE_API_KEY}
+                                            onInit={(_evt, editor) => {
+                                                (editorRef.current = editor).setContent(
+                                                    lesson.content || ""
+                                                );
+                                            }}
+                                            value={field.value}
+                                            {...editorOptions(field, theme)}
+                                        />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                     </div>
-                    <div className="flex justify-end gap-5 items-center">
+                    <div className="flex justify-end gap-5 items-center mt-5">
                         <Button type="submit">Cập nhật</Button>
                         <Link href="/" className="text-sm text-slate-600">
                             Xem trước

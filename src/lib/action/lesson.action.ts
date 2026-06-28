@@ -1,12 +1,13 @@
 "use server";
 
 import { connectToDatabase } from "../mongoose";
-import Lesson from "@/database/lesson.model";
+import Lesson, { ILesson } from "@/database/lesson.model";
 import Lecture from "@/database/lecture.mode";
 import { Types } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { TCreateLessonParams, TUpdateLessonParams } from "@/types";
 import Course from "@/database/course.model";
+import { getCourseBySlug } from "./course.action";
 
 export const createLessons = async (params: TCreateLessonParams) => {
     try {
@@ -58,4 +59,19 @@ export const updateLessons = async (params: TUpdateLessonParams) => {
             message: 'Cập nhật bài học thất bại',
         };
     }
+}
+
+export const getLessonBySlug = async ({ slug, course }: { slug: string, course: string }): Promise<ILesson | undefined> => {
+    try {
+        await connectToDatabase();
+        const findLesson = await Lesson.findOne({
+            slug,
+            course
+        })
+        return findLesson;
+    } catch (error) {
+        console.log(error);
+
+    }
+
 }
