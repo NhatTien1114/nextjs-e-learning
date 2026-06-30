@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/accordion"
 import { TUpdateCourseLecture } from "@/types";
 import IconPlay from "@/components/icons/IconPlay";
+import LessonItem from "@/components/lesson/LessonItem";
 
 const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
     const { slug } = await params;
@@ -71,11 +72,10 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                                     </AccordionTrigger>
                                     <AccordionContent className="!bg-transparent border-none">
                                         {lecture.lessons.map((lesson) => (
-                                            <div key={lesson._id} className="flex items-center flex-cols-3 p-3  bgDarkMode borderDarkMode mb-5 p-0 rounded-lg">
-                                                <IconPlay />
-                                                <span className="text-sm ml-3 font-semibold">{lesson.title}</span>
-                                                <span className="ml-auto text-xs text-grayDark">{lesson.duration} phút</span>
-                                            </div>
+                                            <LessonItem
+                                                key={lesson._id}
+                                                lesson={lesson}
+                                            />
                                         ))}
                                     </AccordionContent>
                                 </AccordionItem>

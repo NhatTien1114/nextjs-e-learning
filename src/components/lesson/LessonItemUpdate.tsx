@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Editor } from '@tinymce/tinymce-react';
+import slugify from "slugify";
 
 import {
     FormControl,
@@ -46,7 +47,14 @@ const LessonItemUpdate = ({ lesson }: { lesson: ILesson }) => {
         try {
             const res = await updateLessons({
                 lessonId: lesson._id,
-                updateData: values,
+                updateData: {
+                    slug: slugify(lesson.title, {
+                        lower: true,
+                        locale: "vi",
+                    }),
+                    video_url: values.video_url,
+                    duration: values.duration
+                },
             });
             if (res?.success) {
                 toast.success("Cập nhật bài học thành công");

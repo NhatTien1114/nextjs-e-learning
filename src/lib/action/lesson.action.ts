@@ -7,7 +7,7 @@ import { Types } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { TCreateLessonParams, TUpdateLessonParams } from "@/types";
 import Course from "@/database/course.model";
-import { getCourseBySlug } from "./course.action";
+import slugify from "slugify";
 
 export const createLessons = async (params: TCreateLessonParams) => {
     try {
@@ -20,7 +20,10 @@ export const createLessons = async (params: TCreateLessonParams) => {
         const newLesson = await Lesson.create({
             _id: newId,
             title: params.title,
-            slug: `bai-hoc-${newId}`,
+            slug: slugify(params.title!, {
+                lower: true,
+                locale: "vi",
+            }),
             course: params.course,
             lectures: [params.lecture]
         });
@@ -74,4 +77,16 @@ export const getLessonBySlug = async ({ slug, course }: { slug: string, course: 
 
     }
 
+}
+
+export const findAllLesson = async ({ course }: { course: string }): Promise<ILesson[] | undefined> => {
+    try {
+        await connectToDatabase();
+        const lessons = await Lesson.find({
+            course
+        })
+        return lessons;
+    } catch (error) {
+        console.log(error);
+    }
 }

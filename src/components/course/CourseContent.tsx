@@ -14,7 +14,7 @@ import { createLectures, updateLectures } from '@/lib/action/leture.action';
 import { toast } from 'react-toastify';
 import { MouseEvent } from "react";
 import Swal from 'sweetalert2';
-import { ILecture } from '@/database/lecture.mode';
+import slugify from "slugify";
 import { TUpdateCourseLecture, TUpdateCourseParams, } from '@/types';
 import { useState } from 'react';
 import { Input } from '../ui/input';
@@ -116,13 +116,17 @@ const CourseContent = ({ course }: { course: TUpdateCourseParams }) => {
         }
     }
 
-    const handleUpadteLesson = async (e: MouseEvent<HTMLSpanElement>, lessonId: string) => {
+    const handleUpadteLesson = async (e: MouseEvent<HTMLSpanElement>, lessonId: string, lessonTitle: string) => {
         e.stopPropagation();
         try {
             const res = await updateLessons({
                 lessonId,
                 updateData: {
                     title: lessonEditing,
+                    slug: slugify(lessonTitle, {
+                        lower: true,
+                        locale: "vi",
+                    }),
                 },
                 path: `/manage/course/content?slug=${course.slug}`
             })
@@ -271,7 +275,7 @@ const CourseContent = ({ course }: { course: TUpdateCourseParams }) => {
                                                                                 "text-green-500"
                                                                             )}
                                                                             onClick={(e) =>
-                                                                                handleUpadteLesson(e, lesson._id)
+                                                                                handleUpadteLesson(e, lesson._id, lesson.title)
                                                                             }
                                                                         >
                                                                             <IconCheck />
