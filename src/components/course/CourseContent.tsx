@@ -116,16 +116,18 @@ const CourseContent = ({ course }: { course: TUpdateCourseParams }) => {
         }
     }
 
-    const handleUpadteLesson = async (e: MouseEvent<HTMLSpanElement>, lessonId: string, lessonTitle: string) => {
+    const handleUpdateLesson = async (e: MouseEvent<HTMLSpanElement>, lessonId: string) => {
         e.stopPropagation();
         try {
             const res = await updateLessons({
                 lessonId,
                 updateData: {
                     title: lessonEditing,
-                    slug: slugify(lessonTitle, {
+                    slug: slugify(lessonEditing, {
                         lower: true,
                         locale: "vi",
+                        strict: true,
+                        replacement: "-",
                     }),
                 },
                 path: `/manage/course/content?slug=${course.slug}`
@@ -275,7 +277,7 @@ const CourseContent = ({ course }: { course: TUpdateCourseParams }) => {
                                                                                 "text-green-500"
                                                                             )}
                                                                             onClick={(e) =>
-                                                                                handleUpadteLesson(e, lesson._id, lesson.title)
+                                                                                handleUpdateLesson(e, lesson._id)
                                                                             }
                                                                         >
                                                                             <IconCheck />

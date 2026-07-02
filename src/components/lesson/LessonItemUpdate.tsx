@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 "use client";
 import { Form } from "@/components/ui/form";
 import { ILesson } from "@/database/lesson.model";
@@ -53,7 +54,8 @@ const LessonItemUpdate = ({ lesson }: { lesson: ILesson }) => {
                         locale: "vi",
                     }),
                     video_url: values.video_url,
-                    duration: values.duration
+                    duration: values.duration,
+                    content: editorRef.current.getContent(),
                 },
             });
             if (res?.success) {

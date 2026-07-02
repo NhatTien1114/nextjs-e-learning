@@ -1,7 +1,5 @@
 @import "tailwindcss";
-
 @custom-variant dark (&:is(.dark *));
-
 @theme {
     --color-primary: #2C5EAD;
     --color-grayDark: #9394A1;
@@ -9,10 +7,8 @@
     --color-grayDarkest: #131316;
     --font-primary: var(--font-be-vietnam-pro);
     --font-secondary: var(--font-manrope);
-
     --animate-accordion-down: accordion-down 0.2s ease-out;
     --animate-accordion-up: accordion-up 0.2s ease-out;
-
     @keyframes accordion-down {
         from {
             height: 0;
@@ -21,7 +17,6 @@
             height: var(--radix-accordion-content-height);
         }
     }
-
     @keyframes accordion-up {
         from {
             height: var(--radix-accordion-content-height);
@@ -48,7 +43,6 @@
         stroke-dasharray: 100;
         animation: dash 1s linear forwards;
     }
-
     @keyframes dash {
         to {
             stroke-dashoffset: 0;
@@ -56,9 +50,12 @@
     }
 }
 
+
 /* ===== UploadThing Button Styling ===== */
 
+
 /* Container wrapper */
+
 .upload-zone {
     position: relative;
     display: flex;
@@ -93,7 +90,9 @@
     box-shadow: 0 0 0 3px rgba(44, 94, 173, 0.15);
 }
 
+
 /* The icon area above the button */
+
 .upload-zone-icon {
     display: flex;
     align-items: center;
@@ -114,7 +113,9 @@
     background: linear-gradient(135deg, #1e3a5f 0%, #1e40af33 100%);
 }
 
+
 /* Hint text */
+
 .upload-zone-hint {
     font-size: 0.8rem;
     color: #94a3b8;
@@ -126,7 +127,9 @@
     color: #64748b;
 }
 
+
 /* Image preview */
+
 .upload-preview-wrapper {
     position: relative;
     width: 100%;
@@ -134,13 +137,11 @@
     border-radius: 0.75rem;
     overflow: hidden;
     border: 2px solid transparent;
-    background: linear-gradient(135deg, #f8fafc, #f1f5f9) padding-box,
-        linear-gradient(135deg, #2c5ead, #6366f1) border-box;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9) padding-box, linear-gradient(135deg, #2c5ead, #6366f1) border-box;
 }
 
 .dark .upload-preview-wrapper {
-    background: linear-gradient(135deg, #1a1a1f, #212126) padding-box,
-        linear-gradient(135deg, #2c5ead, #6366f1) border-box;
+    background: linear-gradient(135deg, #1a1a1f, #212126) padding-box, linear-gradient(135deg, #2c5ead, #6366f1) border-box;
 }
 
 .upload-preview-img {
@@ -176,7 +177,9 @@
     font-weight: 500;
 }
 
+
 /* Override uploadthing default button styles */
+
 [data-ut-element="button"] {
     background: linear-gradient(135deg, #2C5EAD 0%, #4f7ec7 100%) !important;
     border: none !important;
@@ -202,12 +205,16 @@
     box-shadow: 0 1px 4px rgba(44, 94, 173, 0.2) !important;
 }
 
+
 /* Hide the default uploadthing allowed content text */
+
 [data-ut-element="allowed-content"] {
     display: none !important;
 }
 
+
 /* Override the uploadthing container */
+
 [data-state="ready"] {
     display: flex !important;
     flex-direction: column !important;
@@ -220,16 +227,133 @@
         @apply flex items-center justify-center;
     }
     .bgDarkMode {
-        @apply bg-white dark:bg-grayDarker;
+        @apply bg-white;
+        .dark & {
+            @apply bg-grayDarker;
+        }
     }
     .borderDarkMode {
-        /* Đã cập nhật cú pháp opacity cho Tailwind v4 */
-        @apply border-gray-200 dark:border-white/10;
+        @apply border-gray-200;
+        .dark & {
+            @apply border-white/10;
+        }
     }
     .focus-primary {
-        @apply focus:ring-4 focus:ring-primary focus:ring-primary/10;
+        &:focus {
+            @apply ring-4 ring-primary ring-primary/10;
+        }
     }
     .skeleton {
-        @apply bg-gray-200 dark:bg-grayDarker animate-pulse;
+        @apply bg-gray-200 animate-pulse;
+        .dark & {
+            @apply bg-grayDarker;
+        }
+    }
+}
+
+.entry-content {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--foreground);
+    word-break: break-word;
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    ol,
+    figure,
+    blockquote,
+    pre {
+        @apply mb-5;
+        &:last-child {
+            @apply mb-0;
+        }
+    }
+    h1 {
+        @apply text-3xl font-bold;
+    }
+    h2 {
+        @apply text-2xl font-bold;
+    }
+    h3 {
+        @apply text-xl font-bold;
+    }
+    h4,
+    h5,
+    h6 {
+        @apply text-lg font-bold;
+    }
+    ol {
+        list-style: decimal;
+    }
+    ul {
+        list-style: disc;
+    }
+    ol,
+    ul {
+        @apply pl-10;
+        li {
+            @apply mb-2;
+        }
+    }
+    a {
+        @apply underline text-primary font-medium transition-colors;
+        &:hover {
+            @apply text-primary/80;
+        }
+    }
+    blockquote {
+        @apply border-l-4 border-primary pl-4 py-2 italic text-gray-600;
+        .dark & {
+            @apply text-gray-400;
+        }
+    }
+    code {
+        @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono;
+        .dark & {
+            @apply bg-grayDarker;
+        }
+    }
+    pre {
+        @apply bg-gray-900 text-white p-4 rounded overflow-x-auto;
+        .dark & {
+            @apply bg-grayDarkest;
+        }
+        code {
+            @apply bg-transparent px-0 py-0;
+        }
+    }
+    img {
+        @apply max-w-full h-auto rounded my-5;
+    }
+    table {
+        @apply w-full border-collapse my-5;
+        th,
+        td {
+            @apply border px-4 py-2;
+            border-color: rgb(209 213 219);
+            .dark & {
+                border-color: rgb(75 85 99);
+            }
+        }
+        th {
+            @apply bg-gray-100 font-bold;
+            .dark & {
+                @apply bg-grayDarker;
+            }
+        }
+    }
+    figure {
+        @apply text-center;
+        figcaption {
+            @apply text-sm text-gray-600 mt-2;
+            .dark & {
+                @apply text-gray-400;
+            }
+        }
     }
 }
