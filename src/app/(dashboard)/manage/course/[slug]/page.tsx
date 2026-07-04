@@ -20,7 +20,7 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
     if (!data) return null;
 
     const split = data.intro_url?.split("be/")[1];
-    const lectures = data.lectures || [];
+    const lectures = JSON.parse(JSON.stringify(data.lectures || []));
     return (
         <div className="grid lg:grid-cols-[2fr_1fr] gap-10 min-h-screen p-5">
             <div>
@@ -74,7 +74,7 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                                         {lecture.lessons.map((lesson) => (
                                             <LessonItem
                                                 key={lesson._id}
-                                                lesson={lesson}
+                                                lesson={lesson ? JSON.parse(JSON.stringify(lesson)) : undefined}
                                             />
                                         ))}
                                     </AccordionContent>

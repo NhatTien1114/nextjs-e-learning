@@ -6,7 +6,8 @@ import mongoose from "mongoose"
 let isConnected: boolean = false;
 
 export const connectToDatabase = async () => {
-    if (!process.env.MONGODB_LOCAL) {
+    const mongoUri = process.env.MONGODB_LOCAL?.trim().replace(/;$/, "");
+    if (!mongoUri) {
         throw new Error("MONGODB is not set");
     }
     if (isConnected) {
@@ -14,7 +15,7 @@ export const connectToDatabase = async () => {
     }
 
     try {
-        await mongoose.connect(process.env.MONGODB_LOCAL, {
+        await mongoose.connect(mongoUri, {
             dbName: "Ucademy"
         });
         isConnected = true;

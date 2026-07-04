@@ -1,6 +1,5 @@
 import { ECourseLevel, ECourseStatus } from "@/types/enum";
-import { Document, model } from "mongoose";
-import { models, Schema } from "mongoose";
+import { Document, model, models, Schema } from "mongoose";
 
 export interface ICourse extends Document<string> {
     title: string,

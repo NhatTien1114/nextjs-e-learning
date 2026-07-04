@@ -72,9 +72,17 @@ type TUpdateLessonParams = {
     path?: string,
 }
 
+type TCreateHistoryParams = {
+    course: string,
+    lesson: string,
+    checked: boolean | string,
+    path: string,
+
+}
+
 export {
     TActiveLinkProps, TMenuItems, TUserParams,
     TCourseParams, TCourseUpdateParams, TCreateLectureParams,
     TUpdateLectureParams, TUpdateCourseParams, TCreateLessonParams,
-    TUpdateCourseLecture, TUpdateLessonParams
+    TUpdateCourseLecture, TUpdateLessonParams, TCreateHistoryParams
 }
