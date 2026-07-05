@@ -28,7 +28,15 @@ const LessonItem = ({ lesson, url, isActive = false, isCheck = false }: { lesson
                 defaultChecked={isCheck ? true : false}
                 onCheckedChange={(checked) => handleChecked(checked)} />}
             <IconPlay />
-            {url ? <Link href={url} className={cn(isActive ? "pointer-events-none" : "")}>{lesson.title}</Link> : <h4>{lesson.title}</h4>}
+            <div className="flex-1 min-w-0">
+                {url ? (
+                    <Link href={url} className={cn("block truncate", isActive ? "pointer-events-none" : "")} title={lesson.title}>
+                        {lesson.title}
+                    </Link>
+                ) : (
+                    <h4 className="block truncate" title={lesson.title}>{lesson.title}</h4>
+                )}
+            </div>
             <span className="ml-auto text-xs text-grayDark">{lesson.duration} phút</span>
         </div>
     )

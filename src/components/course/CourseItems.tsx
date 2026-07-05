@@ -4,8 +4,8 @@ import React from 'react'
 import { IconEye, IconLock, IconStar } from '../icons';
 import { ICourse } from '@/database/course.model';
 
-const CourseItems = ({ data }: { data: ICourse }) => {
-
+const CourseItems = ({ data, cta, url }: { data: ICourse, cta?: string, url?: string }) => {
+    const courseUrl = url ? url : `/course/${data.slug}`;
     const coursesItem = [
         {
             title: data.views,
@@ -23,7 +23,7 @@ const CourseItems = ({ data }: { data: ICourse }) => {
 
     return (
         <div className="bg-white dark:bg-grayDarker dark:border-grayDark/50 border border-gray-200 p-4 rounded-2xl flex flex-col">
-            <Link href={`/manage/course/${data.slug}`} className="block h-[180px] relative shrink-0">
+            <Link href={courseUrl} className="block h-[180px] relative shrink-0">
                 <Image
                     src={data.image}
                     alt={data.title}
@@ -49,10 +49,10 @@ const CourseItems = ({ data }: { data: ICourse }) => {
                 </div>
 
                 <Link
-                    href={`/manage/course/${data.slug}`}
+                    href={courseUrl}
                     className="flex items-center justify-center w-full mt-auto rounded-lg text-white font-semibold bg-primary h-12 dark:bg-primary/90"
                 >
-                    Xem chi tiết
+                    {cta ? cta : "Xem chi tiết"}
                 </Link>
             </div>
         </div>

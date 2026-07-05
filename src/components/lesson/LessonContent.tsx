@@ -23,7 +23,9 @@ const LessonContent = ({ lectures, course, slug, histories }: { lectures: TUpdat
                     <AccordionItem value={lecture._id}>
                         <AccordionTrigger>
                             <div className="flex items-center gap-3 justify-between w-full pr-5">
-                                <div>{lecture.title}</div>
+                                <div className="flex-1 min-w-0">
+                                    <span className="block truncate" title={lecture.title}>{lecture.title}</span>
+                                </div>
                             </div>
                         </AccordionTrigger>
                         <AccordionContent className="!bg-transparent border-none">

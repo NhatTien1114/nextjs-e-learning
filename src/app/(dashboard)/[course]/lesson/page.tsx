@@ -7,15 +7,25 @@ import Heading from '@/components/typography/Heading';
 import LessonContent from '@/components/lesson/LessonContent';
 import { getHistory } from '@/lib/action/history.action';
 import { cn } from '@/lib/utils';
+import { auth } from '@clerk/nextjs/server';
+import { getUserCourses, getUserInfo } from '@/lib/action/user.action';
+import LessonSaveUrl from './LessonSaveUrl';
 
 const page = async ({ params, searchParams }: {
     params: Promise<{ course: string }>,
     searchParams: Promise<{ slug: string }>
 }) => {
+
+    const { userId } = await auth();
+    if (!userId) return <PageNotFound />;
+    const findUser = await getUserInfo({ userId });
+    if (!findUser) return <PageNotFound />;
+
     const course = (await params).course;
     const slug = (await searchParams).slug;
     const findCourse = await getCourseBySlug({ slug: course });
     if (!findCourse) return <PageNotFound />
+    if (!findUser.courses.includes(findCourse._id)) return <PageNotFound />;
     const lesson = await getLessonBySlug({
         slug,
         course: findCourse._id.toString() || ""
@@ -38,6 +48,10 @@ const page = async ({ params, searchParams }: {
     const percentCompleted = safeHistories.length ? (safeHistories.length.toString() / lessonList.length) * 100 : 0;
     return (
         <div className="grid xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-10 min-h-screen p-5">
+            <LessonSaveUrl
+                course={course}
+                url={`/${course}/lesson?slug=${slug}`}
+            ></LessonSaveUrl>
             <div>
                 <div className="relative mb-5 aspect-video">
                     <iframe width="853"
