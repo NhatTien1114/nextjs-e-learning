@@ -1,20 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
+import { lastLesson } from '@/constants';
 import { useEffect } from 'react'
 
 const LessonSaveUrl = ({ url, course }: { url: string, course: string }) => {
     useEffect(() => {
-        const results: any[] = JSON.parse(localStorage?.getItem("lastLesson") ?? "[]");
+        let results: any[] = JSON.parse(localStorage?.getItem(lastLesson) ?? "[]") || [];
         const item = {
             course,
             lesson: url
         }
-
-        if (results.length > 0 && results.some((el) => el.course === course && el.lesson === url)) {
-            return;
-        }
+        results = results.filter((el) => el.course !== course);
         results.push(item);
-        localStorage?.setItem("lastLesson", JSON.stringify(results));
+        localStorage?.setItem(lastLesson, JSON.stringify(results));
     }, [course, url])
 
     return null;
