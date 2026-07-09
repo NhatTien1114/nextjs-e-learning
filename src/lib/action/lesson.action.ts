@@ -90,3 +90,16 @@ export const findAllLesson = async ({ course }: { course: string }): Promise<ILe
         console.log(error);
     }
 }
+
+export const countCourseLesson = async ({ course }: { course: string }): Promise<number | undefined> => {
+    try {
+        await connectToDatabase();
+        const count = await Lesson.countDocuments({
+            course
+        });
+        return count;
+    } catch (error) {
+        console.log(error);
+    }
+
+}

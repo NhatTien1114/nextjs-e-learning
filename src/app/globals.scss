@@ -2,6 +2,7 @@
 @custom-variant dark (&:is(.dark *));
 @theme {
     --color-primary: #2C5EAD;
+    --color-secondary: #5B8DEF;
     --color-grayDark: #9394A1;
     --color-grayDarker: #212126;
     --color-grayDarkest: #131316;
@@ -355,5 +356,18 @@
                 @apply text-gray-400;
             }
         }
+    }
+}
+
+.animate-bar {
+    animation: animate-width 3s linear 1;
+}
+
+@keyframes animate-width {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
     }
 }
