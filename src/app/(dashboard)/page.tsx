@@ -2,11 +2,11 @@ import { CourseGrid } from '@/common'
 import CourseItems from '@/components/course/CourseItems'
 import Heading from '@/components/typography/Heading'
 import { ICourse } from '@/database/course.model'
-import { getAllCourse } from '@/lib/action/course.action'
+import { getAllCoursePublic } from '@/lib/action/course.action'
 import React from 'react'
 
 const page = async () => {
-    const course = await getAllCourse();
+    const course = await getAllCoursePublic({});
     return (
         <>
             <Heading>Khám phá</Heading>

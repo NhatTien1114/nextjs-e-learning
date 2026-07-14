@@ -25,26 +25,24 @@ const Outline = async ({ params, searchParams }: {
     const percentCompleted = safeHistories.length ? (safeHistories.length.toString() / lessonList) * 100 : 0;
     return (
         <div>
-            <div>
-                <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
-                    <div className="h-3 rounded-lg w-full bgDarkMode border borderDarkMode mb-3">
-                        <div
-                            className={cn(
-                                "h-full rounded-lg bg-primary transition-all duration-300 ease-in-out",
-                                percentCompleted === 100 ? "bg-green-500" : ""
-                            )}
-                            style={{
-                                width: `${percentCompleted}%`,
-                            }}
-                        ></div>
-                    </div>
-                    <LessonContent
-                        lectures={lectures}
-                        course={course}
-                        slug={slug}
-                        histories={safeHistories}
-                    ></LessonContent>
+            <div className="sticky top-5 right-0 max-h-[calc(100svh-100px)] overflow-y-auto">
+                <div className="h-3 rounded-lg w-full bgDarkMode border borderDarkMode mb-3">
+                    <div
+                        className={cn(
+                            "h-full rounded-lg bg-primary transition-all duration-300 ease-in-out",
+                            percentCompleted === 100 ? "bg-green-500" : ""
+                        )}
+                        style={{
+                            width: `${percentCompleted}%`,
+                        }}
+                    ></div>
                 </div>
+                <LessonContent
+                    lectures={lectures}
+                    course={course}
+                    slug={slug}
+                    histories={safeHistories}
+                ></LessonContent>
             </div>
         </div>
     )

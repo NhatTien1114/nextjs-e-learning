@@ -11,7 +11,6 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { TUpdateCourseLecture } from "@/types";
-import IconPlay from "@/components/icons/IconPlay";
 import LessonItem from "@/components/lesson/LessonItem";
 
 const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
@@ -29,8 +28,6 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                         <iframe width="853"
                             height="480"
                             src={`https://www.youtube.com/embed/${split}`}
-                            title="SPIDER-MAN: BRAND NEW DAY – New Trailer"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             className="h-full w-full object-fill rounded-lg"
                         ></iframe>
                         :

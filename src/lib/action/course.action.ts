@@ -3,10 +3,12 @@
 import Lecture from "@/database/lecture.mode";
 import { connectToDatabase } from "../mongoose";
 import Course, { ICourse } from "@/database/course.model";
-import { TCourseParams, TCourseUpdateParams, TUpdateCourseParams } from "@/types";
+import { TAllCourse, TCourseParams, TCourseUpdateParams, TUpdateCourseParams } from "@/types";
 import { Types } from "mongoose";
+import { QueryFilter } from "mongoose";
 import { revalidatePath } from "next/cache";
 import Lesson from "@/database/lesson.model";
+import { ECourseStatus } from "@/types/enum";
 
 export async function getCourseBySlug({ slug }: { slug: string }): Promise<TUpdateCourseParams | undefined> {
     try {
@@ -32,10 +34,36 @@ export async function getCourseBySlug({ slug }: { slug: string }): Promise<TUpda
     }
 }
 
-export async function getAllCourse(): Promise<ICourse[] | undefined> {
+export async function getAllCourse(params: TAllCourse): Promise<ICourse[] | undefined> {
     try {
         connectToDatabase();
-        const courses = await Course.find();
+        const { page = 1, limit = 10, search = "", status } = params;
+        const query: QueryFilter<typeof Course> = {
+            title: { $regex: search, $options: "i" },
+        }
+        const skip = (page - 1) * limit;
+        if (status) {
+            query.status = status;
+        }
+        const courses = await Course.find(query).skip(skip).limit(limit).sort({ created_at: -1 });
+
+        return courses;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function getAllCoursePublic(params: TAllCourse): Promise<ICourse[] | undefined> {
+    try {
+        connectToDatabase();
+        const { page = 1, limit = 10, search = "" } = params;
+        const query: QueryFilter<typeof Course> = {
+            title: { $regex: search, $options: "i" },
+        }
+        const skip = (page - 1) * limit;
+        query.status = ECourseStatus.APPROVED;
+        const courses = await Course.find(query).skip(skip).limit(limit).sort({ created_at: -1 });
+
         return courses;
     } catch (error) {
         console.log(error);

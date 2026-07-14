@@ -38,6 +38,13 @@ interface TUpdateCourseParams extends Omit<ICourse, "lectures"> {
     lectures?: TUpdateCourseLecture[];
 };
 
+type TAllCourse = {
+    page?: number,
+    limit?: number,
+    search?: string,
+    status?: string
+}
+
 type TCreateLectureParams = {
     course: string,
     title?: string,
@@ -84,5 +91,5 @@ export {
     TActiveLinkProps, TMenuItems, TUserParams,
     TCourseParams, TCourseUpdateParams, TCreateLectureParams,
     TUpdateLectureParams, TUpdateCourseParams, TCreateLessonParams,
-    TUpdateCourseLecture, TUpdateLessonParams, TCreateHistoryParams
+    TUpdateCourseLecture, TUpdateLessonParams, TCreateHistoryParams, TAllCourse
 }

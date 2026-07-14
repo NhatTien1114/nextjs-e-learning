@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import {
     Table,
@@ -14,7 +14,7 @@ import {
 import Image from 'next/image'
 import { commonClassNames, courseStatus } from '@/constants'
 import { ECourseStatus } from '@/types/enum'
-import { getAllCourse, updateCourse } from '@/lib/action/course.action'
+import { updateCourse } from '@/lib/action/course.action'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { IconBook, IconEye } from '../icons'
@@ -25,8 +25,21 @@ import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
 import IconLeftArrow from '../icons/IconLeftArrow';
 import IconRightArrow from '../icons/IconRightArrow';
+import Heading from '../typography/Heading';
+import { Input } from '../ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-const CourseManage = async ({ courses }: { courses: ICourse[] }) => {
+const CourseManage = ({ courses }: { courses: ICourse[] }) => {
+
     const handelDeleteCourse = async (slug: string) => {
         try {
             Swal.fire({
@@ -60,7 +73,6 @@ const CourseManage = async ({ courses }: { courses: ICourse[] }) => {
         try {
             Swal.fire({
                 title: "Bạn có chắc chắn cập nhật?",
-                text: "You won't be able to revert this!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -84,10 +96,83 @@ const CourseManage = async ({ courses }: { courses: ICourse[] }) => {
             console.log(error);
         }
     }
+
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const router = useRouter();
+    const createQueryString = useCallback(
+        (name: string, value: string) => {
+            const params = new URLSearchParams(searchParams.toString());
+            params.set(name, value);
+
+            return params.toString();
+        },
+        [searchParams]
+    );
+
+    function handleSearch(term: string) {
+        const params = new URLSearchParams(searchParams);
+
+        if (term) {
+            params.set("search", term); // Sets ?query=your_input
+        } else {
+            params.delete("query"); // Removes parameter if input is empty
+        }
+
+        // Updates the URL without reloading the page
+        router.push(`${pathname}?${createQueryString("search", term)}`);
+    }
+
+    const handleStatus = (status: ECourseStatus) => {
+        router.push(`${pathname}?${createQueryString("status", status)}`);
+    }
+
+    const [page, setPage] = useState(1);
+    const handleChangePage = (type: "prev" | "next") => {
+        if (type === "prev" && page === 1) return;
+        if (type === "prev") setPage((prev) => prev - 1);
+        if (type === "next") setPage((prev) => prev + 1);
+    }
+
+    useEffect(() => {
+        router.push(`${pathname}?${createQueryString("page", page.toString())}`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page]);
     return (
         <>
+            <div className="flex justify-between items-center">
+                <Heading>
+                    Quản lý khóa học
+                </Heading>
+                <div className="flex gap-3 mt-5">
+                    <Input
+                        onChange={(e) => handleSearch(e.target.value)}
+                        placeholder="Tìm kiếm khóa học..."
+                        className="w-full"
+                    />
+                    <Select
+                        onValueChange={(value) => handleStatus(value as ECourseStatus)}
+                    >
+                        <SelectTrigger className="w-full z-10 bg-white dark:bg-grayDarker border border-gray-200 hover:border-primary/70 transition-all">
+                            <SelectValue placeholder="Chọn trạng thái" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white dark:bg-grayDarker w-full">
+                            <SelectGroup>
+                                <SelectLabel>Chọn trạng thái</SelectLabel>
+                                {courseStatus.map((status) => (
+                                    <SelectItem key={status.value} value={status.value}>
+                                        {status.title}
+                                    </SelectItem>
+                                ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+
             <Link
-                href="/manage/course/new"
+                href="/manage/course/create"
                 className="size-10 rounded-full bg-primary flex justify-center items-center text-white fixed right-5 bottom-5 animate-bounce"
             >
                 <svg
@@ -186,10 +271,14 @@ const CourseManage = async ({ courses }: { courses: ICourse[] }) => {
                 </TableBody>
             </Table>
             <div className="flex justify-end gap-3 mt-5">
-                <button className={commonClassNames.paginationButton}>
+                <button
+                    onClick={() => handleChangePage("prev")}
+                    className={commonClassNames.paginationButton}>
                     <IconLeftArrow />
                 </button>
-                <button className={commonClassNames.paginationButton}>
+                <button
+                    onClick={() => handleChangePage("next")}
+                    className={commonClassNames.paginationButton}>
                     <IconRightArrow />
                 </button>
             </div>
