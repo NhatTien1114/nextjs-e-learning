@@ -1,5 +1,5 @@
 import { IconBook, IconComment, IconCourse, IconHome, IconOrder, IconUser } from "@/components/icons";
-import { ECourseLevel, ECourseStatus } from "@/types/enum";
+import { ECourseLevel, ECourseStatus, EOrderStatus } from "@/types/enum";
 
 export const menuItems: {
     url: string;
@@ -56,6 +56,28 @@ export const courseStatus: {
         {
             title: "Không phê duyệt",
             value: ECourseStatus.REJECT,
+            className: "text-red-500 bg-red-500/10",
+        }
+    ]
+
+export const orderStatus: {
+    title: string,
+    value: EOrderStatus,
+    className?: string
+}[] = [
+        {
+            title: "Đã duyệt",
+            value: EOrderStatus.ACCEPTED,
+            className: "text-green-500 bg-green-500/10",
+        },
+        {
+            title: "Chờ duyệt",
+            value: EOrderStatus.PENDING,
+            className: "text-orange-500 bg-orange-500/10",
+        },
+        {
+            title: "Không phê duyệt",
+            value: EOrderStatus.REJECT,
             className: "text-red-500 bg-red-500/10",
         }
     ]

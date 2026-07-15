@@ -5,7 +5,7 @@ import { IconEye, IconLock, IconStar } from '../icons';
 import { ICourse } from '@/database/course.model';
 
 const CourseItems = ({ data, cta, url }: { data: ICourse, cta?: string, url?: string }) => {
-    const courseUrl = url ? url : `/manage/course/${data.slug}`;
+    const courseUrl = url ? url : `/course/${data.slug}`;
     const coursesItem = [
         {
             title: data.views,

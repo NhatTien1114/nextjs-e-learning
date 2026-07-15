@@ -87,9 +87,20 @@ type TCreateHistoryParams = {
 
 }
 
+type TCreateOrderParams = {
+    code: string,
+    course: string,
+    user: string,
+    total?: number,
+    amount?: number,
+    discount?: number,
+    coupon?: string,
+}
+
 export {
     TActiveLinkProps, TMenuItems, TUserParams,
     TCourseParams, TCourseUpdateParams, TCreateLectureParams,
     TUpdateLectureParams, TUpdateCourseParams, TCreateLessonParams,
-    TUpdateCourseLecture, TUpdateLessonParams, TCreateHistoryParams, TAllCourse
+    TUpdateCourseLecture, TUpdateLessonParams, TCreateHistoryParams, TAllCourse,
+    TCreateOrderParams
 }

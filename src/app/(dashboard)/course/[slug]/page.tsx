@@ -1,6 +1,5 @@
 
 import { IconBook, IconEye, IconLock, IconUser } from "@/components/icons";
-import { Button } from "@/components/ui/button";
 import { courseLevelDisplay } from "@/constants";
 import { getCourseBySlug } from "@/lib/action/course.action";
 import Image from "next/image";
@@ -12,11 +11,18 @@ import {
 } from "@/components/ui/accordion"
 import { TUpdateCourseLecture } from "@/types";
 import LessonItem from "@/components/lesson/LessonItem";
+import ButtonBuyCourse from "./ButtonBuyCourse";
+import { auth } from "@clerk/nextjs/server";
+import { getUserInfo } from "@/lib/action/user.action";
 
 const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
     const { slug } = await params;
     const data = await getCourseBySlug({ slug });
     if (!data) return null;
+
+
+    const { userId } = await auth();
+    const findUser = await getUserInfo({ userId: userId || "" });
 
     const split = data.intro_url?.split("be/")[1];
     const lectures = JSON.parse(JSON.stringify(data.lectures || []));
@@ -173,9 +179,11 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                             <span>Tài liệu kèm theo</span>
                         </li>
                     </ul>
-                    <Button variant="primary" className="w-full">
-                        Mua khóa học
-                    </Button>
+                    <ButtonBuyCourse
+                        user={findUser ? JSON.parse(JSON.stringify(findUser)) : null}
+                        courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
+                        amount={data.price}
+                    />
                 </div>
             </div>
         </div>

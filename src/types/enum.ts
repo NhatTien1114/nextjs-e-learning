@@ -27,10 +27,17 @@ enum ELessonType {
     TEXT = "Text",
 }
 
+enum EOrderStatus {
+    PENDING = "Pending",
+    ACCEPTED = "Accepted",
+    REJECT = "Reject"
+}
+
 export {
     EUserRole,
     EUserStatus,
     ECourseLevel,
     ECourseStatus,
-    ELessonType
+    ELessonType,
+    EOrderStatus
 }
