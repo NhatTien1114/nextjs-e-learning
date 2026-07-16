@@ -55,8 +55,7 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
             if (result.isConfirmed) {
                 const res = await updateOrderStatus({ orderId, status });
                 if (res?.success) {
-                    toast.success("Cập nhật thành công");
-                    router.refresh();
+                    toast.success("Cập nhật thành công")
                 }
             }
         });
@@ -65,8 +64,7 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
     const handleCompleteOrder = async ({ orderId, status }: { orderId: string; status: EOrderStatus; }) => {
         const res = await updateOrderStatus({ orderId, status });
         if (res?.success) {
-            toast.success("Cập nhật thành công");
-            router.refresh();
+            toast.success("Cập nhật thành công")
         }
     };
     const searchParams = useSearchParams();
@@ -74,15 +72,14 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
         router.push(`${pathname}?${createQueryString("status", status)}`);
     };
     const handleSearchOrder = (term: string) => {
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams);
         if (term) {
             params.set("search", term);
         } else {
-            params.delete("search");
+            params.delete("query");
         }
 
-        const query = params.toString();
-        router.push(`${pathname}${query ? `?${query}` : ""}`);
+        router.push(`${pathname}?${createQueryString("search", term)}`)
     }
     return (
         <div>
@@ -92,12 +89,10 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
                     <div className="w-full lg:w-[300px]">
                         <Input
                             placeholder="Tìm kiếm đơn hàng..."
-                            value={searchParams.get("search") ?? ""}
                             onChange={(e) => handleSearchOrder(e.target.value)}
                         />
                     </div>
                     <Select
-                        value={searchParams.get("status") ?? undefined}
                         onValueChange={(value) => handleSelectStatus(value as EOrderStatus)}
                     >
                         <SelectTrigger className="w-[180px] bg-grayDarker">
@@ -161,7 +156,7 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
                                         <StatusBadge item={orderStatusItem}></StatusBadge>
                                     </TableCell>
                                     <TableCell>
-                                        {order.status === EOrderStatus.PENDING && (
+                                        {order.status === EOrderStatus.ACCEPTED && (
                                             <div className="flex gap-3">
                                                 <button
                                                     type="button"
@@ -182,20 +177,6 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
                                                     })}
                                                 >
                                                     <IconCancel />
-                                                </button>
-                                            </div>
-                                        )}
-                                        {order.status === EOrderStatus.REJECT && (
-                                            <div className="flex gap-3">
-                                                <button
-                                                    type="button"
-                                                    className={commonClassNames.action}
-                                                    onClick={() => handleCompleteOrder({
-                                                        orderId: order._id,
-                                                        status: EOrderStatus.ACCEPTED
-                                                    })}
-                                                >
-                                                    <IconCheck />
                                                 </button>
                                             </div>
                                         )}
