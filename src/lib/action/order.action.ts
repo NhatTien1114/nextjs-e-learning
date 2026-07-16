@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import Order from "@/database/order.model";
+import Order, { IOrder } from "@/database/order.model";
 import { connectToDatabase } from "../mongoose";
 import { TCreateOrderParams } from "@/types";
 import { QueryFilter } from "mongoose";
 import Course from "@/database/course.model";
 import User from "@/database/user.model";
+import { EOrderStatus } from "@/types/enum";
+import { revalidatePath } from "next/cache";
 
 export const createOrder = async (params: TCreateOrderParams) => {
     try {
@@ -24,7 +27,7 @@ export const createOrder = async (params: TCreateOrderParams) => {
             total: params.total ?? 0,
             amount: params.amount ?? 0,
             discount: params.discount ?? 0,
-            coupon: params.coupon ?? "",
+            coupon: params.coupon || undefined,
         });
 
         return {
@@ -69,4 +72,54 @@ export async function fetchOrders(params: any) {
             .limit(limit);
         return orders;
     } catch (error) { }
+}
+
+export async function updateOrderStatus({ orderId, status }: { orderId: string, status: EOrderStatus }) {
+    try {
+        await connectToDatabase();
+        const findOrder = await Order.findById(orderId).populate({
+            path: "course",
+            select: "_id",
+            model: Course
+        }).populate({
+            path: "user",
+            select: "_id",
+            model: User
+        });
+        if (!findOrder) return;
+        if (findOrder.status === EOrderStatus.REJECT && status === EOrderStatus.REJECT) return;
+        const findUser = await User.findById(findOrder.user._id);
+
+        await Order.findByIdAndUpdate(orderId, { status });
+
+        if (status === EOrderStatus.ACCEPTED && findOrder.status === EOrderStatus.PENDING) {
+            findUser.courses.push(findOrder.course._id);
+            await findUser.save();
+        }
+
+        if (status === EOrderStatus.REJECT && findOrder.status === EOrderStatus.ACCEPTED) {
+            findUser.courses = findUser.courses.filter((el: any) => el.toString() !== findOrder.course._id.toString());
+            await findUser.save();
+        }
+        revalidatePath("/manage/order");
+        return {
+            success: true
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function getOrderDetail({ code }: { code: string }) {
+    try {
+        await connectToDatabase();
+        const orderDetail = await Order.findOne({ code }).populate({
+            path: "course",
+            model: Course,
+            select: "title",
+        });
+        return JSON.parse(JSON.stringify(orderDetail));
+    } catch (error) {
+        console.log(error)
+    }
 }

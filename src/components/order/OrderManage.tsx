@@ -26,7 +26,11 @@ import Heading from "../typography/Heading";
 import StatusBadge from "@/common/StatusBadge";
 import IconCheck from "../icons/IconCheck";
 import IconCancel from "../icons/IconCancel";
+import { useSearchParams } from "next/navigation";
+import { updateOrderStatus } from "@/lib/action/order.action";
+import { toast } from "react-toastify";
 interface IOrderManageProps {
+    _id: string,
     code: string;
     total: number;
     amount: number;
@@ -40,7 +44,7 @@ interface IOrderManageProps {
     };
 }
 const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
-    const handleCancelOrder = () => {
+    const handleCancelOrder = async ({ orderId, status }: { orderId: string; status: EOrderStatus; }) => {
         Swal.fire({
             title: "Bạn có chắc muốn hủy đơn hàng không?",
             icon: "warning",
@@ -49,20 +53,37 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
             cancelButtonText: "Thoát",
         }).then(async (result) => {
             if (result.isConfirmed) {
+                const res = await updateOrderStatus({ orderId, status });
+                if (res?.success) {
+                    toast.success("Cập nhật thành công");
+                    router.refresh();
+                }
             }
         });
     };
     const { createQueryString, router, pathname } = useQueryString();
-    const handleCompleteOrder = () => { };
+    const handleCompleteOrder = async ({ orderId, status }: { orderId: string; status: EOrderStatus; }) => {
+        const res = await updateOrderStatus({ orderId, status });
+        if (res?.success) {
+            toast.success("Cập nhật thành công");
+            router.refresh();
+        }
+    };
+    const searchParams = useSearchParams();
     const handleSelectStatus = (status: EOrderStatus) => {
         router.push(`${pathname}?${createQueryString("status", status)}`);
     };
-    const handleSearchOrder = debounce(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
-            router.push(`${pathname}?${createQueryString("search", e.target.value)}`);
-        },
-        500
-    );
+    const handleSearchOrder = (term: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (term) {
+            params.set("search", term);
+        } else {
+            params.delete("search");
+        }
+
+        const query = params.toString();
+        router.push(`${pathname}${query ? `?${query}` : ""}`);
+    }
     return (
         <div>
             <div className="flex flex-col lg:flex-row lg:items-center gap-5 justify-between mb-10">
@@ -71,16 +92,18 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
                     <div className="w-full lg:w-[300px]">
                         <Input
                             placeholder="Tìm kiếm đơn hàng..."
-                            onChange={(e) => handleSearchOrder(e)}
+                            value={searchParams.get("search") ?? ""}
+                            onChange={(e) => handleSearchOrder(e.target.value)}
                         />
                     </div>
                     <Select
+                        value={searchParams.get("status") ?? undefined}
                         onValueChange={(value) => handleSelectStatus(value as EOrderStatus)}
                     >
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[180px] bg-grayDarker">
                             <SelectValue placeholder="Chọn trạng thái" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-grayDarker">
                             <SelectGroup>
                                 {orderStatus.map((status) => (
                                     <SelectItem value={status.value} key={status.value}>
@@ -138,22 +161,44 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
                                         <StatusBadge item={orderStatusItem}></StatusBadge>
                                     </TableCell>
                                     <TableCell>
-                                        <div className="flex gap-3">
-                                            <button
-                                                type="button"
-                                                className={commonClassNames.action}
-                                                onClick={handleCompleteOrder}
-                                            >
-                                                <IconCheck />
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={commonClassNames.action}
-                                                onClick={handleCancelOrder}
-                                            >
-                                                <IconCancel />
-                                            </button>
-                                        </div>
+                                        {order.status === EOrderStatus.PENDING && (
+                                            <div className="flex gap-3">
+                                                <button
+                                                    type="button"
+                                                    className={commonClassNames.action}
+                                                    onClick={() => handleCompleteOrder({
+                                                        orderId: order._id,
+                                                        status: EOrderStatus.ACCEPTED
+                                                    })}
+                                                >
+                                                    <IconCheck />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={commonClassNames.action}
+                                                    onClick={() => handleCancelOrder({
+                                                        orderId: order._id,
+                                                        status: EOrderStatus.REJECT
+                                                    })}
+                                                >
+                                                    <IconCancel />
+                                                </button>
+                                            </div>
+                                        )}
+                                        {order.status === EOrderStatus.REJECT && (
+                                            <div className="flex gap-3">
+                                                <button
+                                                    type="button"
+                                                    className={commonClassNames.action}
+                                                    onClick={() => handleCompleteOrder({
+                                                        orderId: order._id,
+                                                        status: EOrderStatus.ACCEPTED
+                                                    })}
+                                                >
+                                                    <IconCheck />
+                                                </button>
+                                            </div>
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             );
