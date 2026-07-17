@@ -1,5 +1,6 @@
 import { IconBook, IconComment, IconCourse, IconHome, IconOrder, IconUser } from "@/components/icons";
-import { ECourseLevel, ECourseStatus, EOrderStatus } from "@/types/enum";
+import IconCoupon from "@/components/icons/IconCoupon";
+import { ECouponType, ECourseLevel, ECourseStatus, EOrderStatus } from "@/types/enum";
 
 export const menuItems: {
     url: string;
@@ -30,6 +31,11 @@ export const menuItems: {
             url: "/manage/order",
             title: "Quản lý đơn hàng",
             icon: <IconOrder className="size-5" />
+        },
+        {
+            url: "/manage/coupon",
+            title: "Quản lý coupon",
+            icon: <IconCoupon className="size-5" />
         },
         {
             url: "/manage/comment",
@@ -153,3 +159,18 @@ export const editorOptions = (field: any, theme: any) => ({
 });
 
 export const lastLesson = "lastLesson"
+
+
+export const couponTypes: {
+    title: string;
+    value: ECouponType;
+}[] = [
+        {
+            title: "Phần trăm",
+            value: ECouponType.PERCENT,
+        },
+        {
+            title: "Giá trị",
+            value: ECouponType.AMOUNT,
+        },
+    ];

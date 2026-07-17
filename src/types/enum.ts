@@ -33,11 +33,17 @@ enum EOrderStatus {
     REJECT = "Reject"
 }
 
+enum ECouponType {
+    PERCENT = "Percent",
+    AMOUNT = "Amount"
+}
+
 export {
     EUserRole,
     EUserStatus,
     ECourseLevel,
     ECourseStatus,
     ELessonType,
-    EOrderStatus
+    EOrderStatus,
+    ECouponType
 }

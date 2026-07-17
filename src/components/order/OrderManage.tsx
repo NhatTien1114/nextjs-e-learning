@@ -156,7 +156,7 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
                                         <StatusBadge item={orderStatusItem}></StatusBadge>
                                     </TableCell>
                                     <TableCell>
-                                        {order.status === EOrderStatus.ACCEPTED && (
+                                        {order.status === EOrderStatus.PENDING && (
                                             <div className="flex gap-3">
                                                 <button
                                                     type="button"
@@ -168,6 +168,20 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
                                                 >
                                                     <IconCheck />
                                                 </button>
+                                                <button
+                                                    type="button"
+                                                    className={commonClassNames.action}
+                                                    onClick={() => handleCancelOrder({
+                                                        orderId: order._id,
+                                                        status: EOrderStatus.REJECT
+                                                    })}
+                                                >
+                                                    <IconCancel />
+                                                </button>
+                                            </div>
+                                        )}
+                                        {order.status === EOrderStatus.ACCEPTED && (
+                                            <div className="flex gap-3">
                                                 <button
                                                     type="button"
                                                     className={commonClassNames.action}

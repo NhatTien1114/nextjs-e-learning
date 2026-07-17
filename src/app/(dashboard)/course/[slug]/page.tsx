@@ -1,5 +1,3 @@
-
-import { IconBook, IconEye, IconLock, IconUser } from "@/components/icons";
 import { courseLevelDisplay } from "@/constants";
 import { getCourseBySlug } from "@/lib/action/course.action";
 import Image from "next/image";
@@ -11,9 +9,10 @@ import {
 } from "@/components/ui/accordion"
 import { TUpdateCourseLecture } from "@/types";
 import LessonItem from "@/components/lesson/LessonItem";
-import ButtonBuyCourse from "./ButtonBuyCourse";
 import { auth } from "@clerk/nextjs/server";
 import { getUserInfo } from "@/lib/action/user.action";
+import CourseInfo from "./CourseInfo";
+import AlreadyEnroll from "./AlreadyEnroll";
 
 const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
     const { slug } = await params;
@@ -23,7 +22,7 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
 
     const { userId } = await auth();
     const findUser = await getUserInfo({ userId: userId || "" });
-
+    const userCourses = findUser?.courses.map((c: string) => c.toString());
     const split = data.intro_url?.split("be/")[1];
     const lectures = JSON.parse(JSON.stringify(data.lectures || []));
     return (
@@ -148,43 +147,13 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                 </BoxSection>
             </div>
             <div>
-                <div className="bg-white rounded-lg p-5 sticky top-5">
-                    <div className="flex items-center gap-2 mb-3">
-                        <strong className="text-primary text-xl font-bold">
-                            {data.price.toLocaleString("vi-VN")}đ
-                        </strong>
-                        <span className="text-slate-400 line-through text-sm">
-                            {data.sale_price.toLocaleString("vi-VN")}đ
-                        </span>
-                        <span className="ml-auto inline-block px-3 py-1 rounded-lg bg-primary/20 text-primary font-semibold text-sm">
-                            {Math.floor((data.sale_price / data.price) * 100)}%
-                        </span>
-                    </div>
-                    <h3 className="font-bold mb-3 text-sm text-black">Khóa học gồm có:</h3>
-                    <ul className="mb-5 flex flex-col gap-2 text-sm text-slate-500">
-                        <li className="flex items-center gap-2">
-                            <IconLock className="size-4" />
-                            <span>30h học</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <IconEye className="size-4" />
-                            <span>Video Full HD</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <IconUser className="size-4" />
-                            <span>Có nhóm hỗ trợ</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <IconBook className="size-4" />
-                            <span>Tài liệu kèm theo</span>
-                        </li>
-                    </ul>
-                    <ButtonBuyCourse
-                        user={findUser ? JSON.parse(JSON.stringify(findUser)) : null}
-                        courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
-                        amount={data.price}
-                    />
-                </div>
+                {userCourses.includes(data._id.toString()) ? (
+                    <AlreadyEnroll />
+                ) : (<CourseInfo
+                    findUser={findUser ? JSON.parse(JSON.stringify(findUser)) : []}
+                    data={data ? JSON.parse(JSON.stringify(data)) : []}
+                />)}
+
             </div>
         </div>
     );
