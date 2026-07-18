@@ -1,9 +1,13 @@
 import CouponManage from '@/components/coupon/CouponManage'
+import { getCoupon } from '@/lib/action/coupon.action';
 import React from 'react'
 
-const page = () => {
+const page = async () => {
+    const coupons = await getCoupon();
     return (
-        <CouponManage></CouponManage>
+        <CouponManage
+            coupons={coupons ? JSON.parse(JSON.stringify(coupons)) : []}
+        ></CouponManage>
     )
 }
 

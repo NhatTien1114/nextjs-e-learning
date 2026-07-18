@@ -10,6 +10,7 @@ export interface ICoupon extends Document<string> {
     start_date: Date;
     end_date: Date;
     limit: number;
+    used: number;
     courses: Schema.Types.ObjectId[];
     type: ECouponType;
     value: number;
@@ -37,6 +38,10 @@ const couponSchema = new Schema<ICoupon>({
     },
     limit: {
         type: Number,
+    },
+    used: {
+        type: Number,
+        default: 0
     },
     courses: [
         {

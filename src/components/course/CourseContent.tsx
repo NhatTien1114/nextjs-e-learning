@@ -6,8 +6,6 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
-import IconDelete from '../icons/IconDelete'
-import IconEdit from '../icons/IconEdit'
 import { commonClassNames } from '@/constants'
 import { Button } from '../ui/button'
 import { createLectures, updateLectures } from '@/lib/action/leture.action';
@@ -24,6 +22,7 @@ import { ILesson } from '@/database/lesson.model';
 import IconCheck from '../icons/IconCheck';
 import IconCancel from '../icons/IconCancel';
 import LessonItemUpdate from '../lesson/LessonItemUpdate';
+import ActionEdit from '@/common/ActionEdit';
 
 const CourseContent = ({ course }: { course: TUpdateCourseParams }) => {
     const lectures = course.lectures;
@@ -222,27 +221,18 @@ const CourseContent = ({ course }: { course: TUpdateCourseParams }) => {
                                             <>
                                                 <div>{lecture.title}</div>
                                                 <div className="flex gap-2">
-                                                    <span
-                                                        className={cn(
-                                                            commonClassNames.action,
-                                                            "text-blue-500"
-                                                        )}
-                                                        onClick={(e) => {
+
+                                                    <ActionEdit
+                                                        icon="edit"
+                                                        onClick={(e: MouseEvent<HTMLSpanElement>) => {
                                                             e.stopPropagation();
                                                             setLectureIdEditing(lecture._id);
                                                         }}
-                                                    >
-                                                        <IconEdit />
-                                                    </span>
-                                                    <span
-                                                        className={cn(
-                                                            commonClassNames.action,
-                                                            "text-red-500"
-                                                        )}
+                                                    ></ActionEdit>
+                                                    <ActionEdit
+                                                        icon="delete"
                                                         onClick={(e) => handleDeleteLecture(e, lecture._id)}
-                                                    >
-                                                        <IconDelete />
-                                                    </span>
+                                                    ></ActionEdit>
                                                 </div>
                                             </>
                                         )}
@@ -300,27 +290,17 @@ const CourseContent = ({ course }: { course: TUpdateCourseParams }) => {
                                                                 <>
                                                                     <div>{lesson.title}</div>
                                                                     <div className="flex gap-2">
-                                                                        <span
-                                                                            className={cn(
-                                                                                commonClassNames.action,
-                                                                                "text-blue-500"
-                                                                            )}
+                                                                        <ActionEdit
+                                                                            icon="edit"
                                                                             onClick={(e) => {
                                                                                 e.stopPropagation();
                                                                                 setLessonIdEditing(lesson._id);
                                                                             }}
-                                                                        >
-                                                                            <IconEdit />
-                                                                        </span>
-                                                                        <span
-                                                                            className={cn(
-                                                                                commonClassNames.action,
-                                                                                "text-red-500"
-                                                                            )}
+                                                                        ></ActionEdit>
+                                                                        <ActionEdit
+                                                                            icon="delete"
                                                                             onClick={(e) => handleDeleteLesson(e, lesson._id)}
-                                                                        >
-                                                                            <IconDelete />
-                                                                        </span>
+                                                                        ></ActionEdit>
                                                                     </div>
                                                                 </>
                                                             )}

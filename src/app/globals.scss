@@ -1,5 +1,7 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 @custom-variant dark (&:is(.dark *));
+
 @theme {
     --color-primary: #2C5EAD;
     --color-secondary: #5B8DEF;
@@ -10,18 +12,22 @@
     --font-secondary: var(--font-manrope);
     --animate-accordion-down: accordion-down 0.2s ease-out;
     --animate-accordion-up: accordion-up 0.2s ease-out;
+
     @keyframes accordion-down {
         from {
             height: 0;
         }
+
         to {
             height: var(--radix-accordion-content-height);
         }
     }
+
     @keyframes accordion-up {
         from {
             height: var(--radix-accordion-content-height);
         }
+
         to {
             height: 0;
         }
@@ -44,6 +50,7 @@
         stroke-dasharray: 100;
         animation: dash 1s linear forwards;
     }
+
     @keyframes dash {
         to {
             stroke-dashoffset: 0;
@@ -227,27 +234,34 @@
     .flexCenter {
         @apply flex items-center justify-center;
     }
+
     .bgDarkMode {
         @apply bg-white;
+
         .dark & {
             @apply bg-grayDarker;
         }
     }
+
     .borderDarkMode {
         @apply border-gray-200;
+
         .dark & {
             @apply border-white/10;
         }
     }
+
     .focus-primary {
         &:focus {
             @apply ring-4 ring-primary ring-primary/10;
         }
     }
+
     .skeleton {
-        @apply bg-gray-300 animate-pulse;
+        @apply bg-gray-100 animate-pulse;
+
         .dark & {
-            @apply bg-grayDarker;
+            @apply bg-grayDark;
         }
     }
 }
@@ -257,6 +271,7 @@
     line-height: 1.8;
     color: var(--foreground);
     word-break: break-word;
+
     p,
     h1,
     h2,
@@ -270,88 +285,115 @@
     blockquote,
     pre {
         @apply mb-5;
+
         &:last-child {
             @apply mb-0;
         }
     }
+
     h1 {
         @apply text-3xl font-bold;
     }
+
     h2 {
         @apply text-2xl font-bold;
     }
+
     h3 {
         @apply text-xl font-bold;
     }
+
     h4,
     h5,
     h6 {
         @apply text-lg font-bold;
     }
+
     ol {
         list-style: decimal;
     }
+
     ul {
         list-style: disc;
     }
+
     ol,
     ul {
         @apply pl-10;
+
         li {
             @apply mb-2;
         }
     }
+
     a {
         @apply underline text-primary font-medium transition-colors;
+
         &:hover {
             @apply text-primary/80;
         }
     }
+
     blockquote {
         @apply border-l-4 border-primary pl-4 py-2 italic text-gray-600;
+
         .dark & {
             @apply text-gray-400;
         }
     }
+
     code {
         @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono;
+
         .dark & {
             @apply bg-grayDarker;
         }
     }
+
     pre {
         @apply bg-gray-900 text-white p-4 rounded overflow-x-auto;
+
         .dark & {
             @apply bg-grayDarkest;
         }
+
         code {
             @apply bg-transparent px-0 py-0;
         }
     }
+
     img {
         @apply max-w-full h-auto rounded my-5;
     }
+
     table {
         @apply w-full border-collapse my-5;
+
         th,
         td {
             @apply border px-4 py-2;
             border-color: rgb(209 213 219);
+
             .dark & {
                 border-color: rgb(75 85 99);
             }
         }
+
         th {
             @apply bg-gray-100 font-bold;
+
             .dark & {
                 @apply bg-grayDarker;
             }
         }
     }
+
     figure {
         @apply text-center;
+
         figcaption {
             @apply text-sm text-gray-600 mt-2;
+
             .dark & {
                 @apply text-gray-400;
             }
@@ -367,6 +409,7 @@
     from {
         width: 100%;
     }
+
     to {
         width: 0;
     }

@@ -37,6 +37,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import ActionEdit from '@/common/ActionEdit';
 
 const CourseManage = ({ courses }: { courses: ICourse[] }) => {
 
@@ -253,17 +254,11 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                                     >
                                         <IconEye />
                                     </Link>
-                                    <Link
-                                        href={`/manage/course/course-content?slug=${course.slug}`}
-                                        className={commonClassNames.action}
-                                    >
-                                        <IconEdit />
-                                    </Link>
-                                    <button
+                                    <ActionEdit
                                         onClick={() => handelDeleteCourse(course.slug)}
-                                        className={commonClassNames.action}>
-                                        <IconDelete />
-                                    </button>
+                                        icon="delete"
+                                        url={`/manage/course/course-content?slug=${course.slug}`}
+                                    />
                                 </div>
                             </TableCell>
                         </TableRow>

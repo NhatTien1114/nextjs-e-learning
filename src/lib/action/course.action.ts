@@ -47,7 +47,7 @@ export async function getAllCourse(params: TAllCourse): Promise<ICourse[] | unde
         }
         const courses = await Course.find(query).skip(skip).limit(limit).sort({ created_at: -1 });
 
-        return courses;
+        return JSON.parse(JSON.stringify(courses));
     } catch (error) {
         console.log(error);
     }

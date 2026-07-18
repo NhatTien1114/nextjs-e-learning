@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import {
     Table,
     TableBody,
+    TableCell,
     TableHead,
     TableHeader,
     TableRow,
@@ -11,8 +12,14 @@ import Heading from "../typography/Heading";
 import IconLeftArrow from "../icons/IconLeftArrow";
 import IconRightArrow from "../icons/IconRightArrow";
 import Link from "next/link";
+import { ICoupon } from "@/database/coupon.model";
+import { Button } from "../ui/button";
+import { TrashIcon } from "lucide-react";
+import { ECouponType } from "@/types/enum";
+import StatusBadge from "@/common/StatusBadge";
+import ActionEdit from "@/common/ActionEdit";
 
-const page = () => {
+const page = ({ coupons }: { coupons: ICoupon[] }) => {
     return (
         <div className="m-5">
             <Link
@@ -53,7 +60,33 @@ const page = () => {
                         <TableHead>Hành động</TableHead>
                     </TableRow>
                 </TableHeader>
-                <TableBody></TableBody>
+                <TableBody>
+                    {coupons?.map((coupon) => (
+                        <TableRow key={coupon._id}>
+                            <TableCell><strong>{coupon.code}</strong></TableCell>
+                            <TableCell>{coupon.title}</TableCell>
+                            <TableCell>{coupon.type === ECouponType.AMOUNT ? coupon.value.toLocaleString("en-US") : coupon.value} {coupon.type === ECouponType.PERCENT ? "%" : "VNĐ"}</TableCell>
+                            <TableCell>{coupon.used ? coupon.used : 0} / {coupon.limit ? coupon.limit : 0}</TableCell>
+                            <TableCell>
+                                <StatusBadge item={{ title: coupon.active ? "Active" : "Inactive", className: coupon.active ? "text-green-500 bg-green-500/10" : "text-red-500 bg-red-500/10" }}></StatusBadge>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex gap-2">
+                                    <ActionEdit
+                                        icon="edit"
+                                    // url={`/manage/coupon/edit?slug=${coupon.slug}`}
+                                    ></ActionEdit>
+
+                                    <ActionEdit
+                                        icon="delete"
+                                    // onClick={() => handelDeleteCourse(coupon.code)}
+                                    ></ActionEdit>
+                                </div>
+
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
             </Table>
             <div className="flex justify-end gap-3 mt-5">
                 <button className={commonClassNames.paginationButton}>
