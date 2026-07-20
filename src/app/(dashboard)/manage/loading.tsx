@@ -21,13 +21,10 @@ const Loading = () => {
             </div>
 
             {/* Table */}
-            <Table className="table-responsive">
+            <Table className="m-5 table-responsive">
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Thông tin</TableHead>
-                        <TableHead>Giá</TableHead>
-                        <TableHead>Trạng thái</TableHead>
-                        <TableHead>Hành động</TableHead>
+                        <TableHead className="h-2 inline-block w-[100px] text-center gap-4 rounded-lg skeleton"></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>

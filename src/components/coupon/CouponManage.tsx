@@ -1,3 +1,4 @@
+"use client"
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -13,18 +14,47 @@ import IconLeftArrow from "../icons/IconLeftArrow";
 import IconRightArrow from "../icons/IconRightArrow";
 import Link from "next/link";
 import { ICoupon } from "@/database/coupon.model";
-import { Button } from "../ui/button";
-import { TrashIcon } from "lucide-react";
 import { ECouponType } from "@/types/enum";
 import StatusBadge from "@/common/StatusBadge";
 import ActionEdit from "@/common/ActionEdit";
+import Swal from "sweetalert2";
+import { deleteCoupon } from "@/lib/action/coupon.action";
 
 const page = ({ coupons }: { coupons: ICoupon[] }) => {
+    const handleDeleteCoupon = async (couponCode: string) => {
+        try {
+            Swal.fire({
+                title: "Bạn có chắc chắn xóa?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Đồng ý xóa!",
+                cancelButtonText: "Hủy bỏ!",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await deleteCoupon(couponCode);
+                    Swal.fire({
+                        title: "Xóa thành công!",
+                        icon: "success",
+                        showConfirmButton: false,
+                    });
+                    return;
+                }
+            });
+        } catch (error) {
+            Swal.fire({
+                title: "Lỗi khi xóa!",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        }
+    }
+
     return (
         <div className="m-5">
             <Link
                 href="/manage/coupon/create"
-                className="size-10 rounded-full bg-primary flex justify-center items-center text-white fixed right-5 bottom-5 animate-bounce"
+                className="size-10 z-10 rounded-full bg-primary flex justify-center items-center text-white fixed right-5 bottom-5 animate-bounce"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -68,18 +98,18 @@ const page = ({ coupons }: { coupons: ICoupon[] }) => {
                             <TableCell>{coupon.type === ECouponType.AMOUNT ? coupon.value.toLocaleString("en-US") : coupon.value} {coupon.type === ECouponType.PERCENT ? "%" : "VNĐ"}</TableCell>
                             <TableCell>{coupon.used ? coupon.used : 0} / {coupon.limit ? coupon.limit : 0}</TableCell>
                             <TableCell>
-                                <StatusBadge item={{ title: coupon.active ? "Active" : "Inactive", className: coupon.active ? "text-green-500 bg-green-500/10" : "text-red-500 bg-red-500/10" }}></StatusBadge>
+                                <StatusBadge item={{ title: coupon.active ? "Đang hoạt động" : "Không hoạt động", className: coupon.active ? "text-green-500 bg-green-500/10" : "text-red-500 bg-red-500/10" }}></StatusBadge>
                             </TableCell>
                             <TableCell>
                                 <div className="flex gap-2">
                                     <ActionEdit
                                         icon="edit"
-                                    // url={`/manage/coupon/edit?slug=${coupon.slug}`}
+                                        url={`/manage/coupon/update?code=${coupon.code}`}
                                     ></ActionEdit>
 
                                     <ActionEdit
                                         icon="delete"
-                                    // onClick={() => handelDeleteCourse(coupon.code)}
+                                        onClick={() => handleDeleteCoupon(coupon.code)}
                                     ></ActionEdit>
                                 </div>
 

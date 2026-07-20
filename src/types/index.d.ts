@@ -1,3 +1,4 @@
+import { ICoupon } from "@/database/coupon.model";
 import { ICourse } from "@/database/course.model";
 import { ILecture } from "@/database/lecture.mode";
 import { ILesson } from "@/database/lesson.model";
@@ -97,10 +98,28 @@ type TCreateOrderParams = {
     coupon?: string,
 }
 
+type TCreateCouponParams = {
+    title?: string,
+    code?: string,
+    startDate?: string,
+    endDate?: string,
+    active?: boolean,
+    value?: number,
+    type?: string,
+    courses?: string[],
+    limit?: number,
+}
+
+type TUpdateCouponParams = {
+    code: string,
+    updateData: Partial<ICoupon> | any
+    path?: string
+}
+
 export {
     TActiveLinkProps, TMenuItems, TUserParams,
     TCourseParams, TCourseUpdateParams, TCreateLectureParams,
     TUpdateLectureParams, TUpdateCourseParams, TCreateLessonParams,
     TUpdateCourseLecture, TUpdateLessonParams, TCreateHistoryParams, TAllCourse,
-    TCreateOrderParams
+    TCreateOrderParams, TCreateCouponParams, TUpdateCouponParams
 }

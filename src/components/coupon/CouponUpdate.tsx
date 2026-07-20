@@ -1,10 +1,7 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+
 import {
     Form,
     FormControl,
@@ -24,16 +21,23 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { couponTypes } from "@/constants";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
 import { ECouponType } from "@/types/enum";
-import { createCoupon } from "@/lib/action/coupon.action";
-import { toast } from "react-toastify";
+import { NumericFormat } from 'react-number-format';
+import React, { useEffect, useState } from 'react'
+import z from "zod";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ICoupon } from "@/database/coupon.model";
+import { Calendar } from "@/components/ui/calendar";
+import IconClose from "../icons/IconClose";
+import { Checkbox } from "../ui/checkbox";
 import { debounce } from "lodash";
 import { getAllCourse } from "@/lib/action/course.action";
 import { ICourse } from "@/database/course.model";
-import { Checkbox } from "../ui/checkbox";
-import IconClose from "../icons/IconClose";
-import { NumericFormat } from 'react-number-format';
+import { updateCoupon } from "@/lib/action/coupon.action";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+
 const formSchema = z.object({
     title: z.string({
         message: "Tiêu đề không được để trống",
@@ -44,65 +48,41 @@ const formSchema = z.object({
         })
         .min(3, "Mã giảm giá phải có ít nhất 3 ký tự")
         .max(10, "Mã giảm giá không được quá 10 ký tự"),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
+    start_date: z.string().optional(),
+    end_date: z.string().optional(),
     active: z.boolean().optional(),
     value: z.number().optional(),
     type: z.string().optional(),
     courses: z.array(z.string()).optional(),
     limit: z.number().optional(),
 });
-const NewCouponForm = () => {
-    const [startDate, setStartDate] = useState<Date>();
-    const [endDate, setEndDate] = useState<Date>();
-    const [findCourse, setFindCourse] = useState<ICourse[]>([]);
-    const [selectedCourses, setSelectedCourses] = useState<ICourse[]>([]);
+const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
+
+    const [findCourse, setFindCourse] = useState<any[] | undefined>([]);
+    const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
+    const [startDate, setStartDate] = useState<Date | undefined>(
+        coupon.start_date ? new Date(coupon.start_date) : undefined
+    );
+    const [endDate, setEndDate] = useState<Date | undefined>(
+        coupon.end_date ? new Date(coupon.end_date) : undefined
+    );
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            active: true,
-            value: 0,
-            type: ECouponType.PERCENT,
-            limit: 0,
-            courses: [],
-            code: "",
-            title: "",
-            startDate: "",
-            endDate: "",
+            active: coupon.active,
+            value: coupon.value,
+            type: coupon.type,
+            limit: coupon.limit,
+            code: coupon.code,
+            title: coupon.title,
         },
     });
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            // console.log(values);
-            const newCoupon = await createCoupon(values);
-            console.log(newCoupon);
-            if (newCoupon?.code) {
-                toast.success("Tạo mã giảm giá thành công");
-                form.reset(
-                    {
-                        active: true,
-                        value: 0,
-                        type: ECouponType.PERCENT,
-                        limit: 0,
-                        courses: [],
-                        code: "",
-                        title: "",
-                    }
-                )
-                setStartDate(undefined);
-                setEndDate(undefined);
-                setSelectedCourses([]);
-                setFindCourse([]);
-            }
-        } catch (error: any) {
-            toast.error(error.message || "Tạo mã giảm giá thất bại");
+    useEffect(() => {
+        if (coupon.courses) {
+            setSelectedCourses(coupon.courses)
         }
-    }
-    const couponTypeWatch = useWatch({
-        control: form.control,
-        name: 'type'
-    });
+    }, [coupon.courses])
 
     const handleSearch = debounce(async (e: React.ChangeEvent<HTMLInputElement>) => {
         try {
@@ -127,6 +107,48 @@ const NewCouponForm = () => {
             setSelectedCourses((prev) => [...prev, course]);
         } else {
             setSelectedCourses((prev) => prev.filter((selectedCourse) => selectedCourse._id !== course._id));
+        }
+    }
+
+    const couponTypeWatch = useWatch({
+        control: form.control,
+        name: 'type'
+    });
+
+    const router = useRouter();
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            const coupon = await updateCoupon({
+                code: values.code,
+                updateData: {
+                    ...values,
+                    start_date: startDate,
+                    end_date: endDate,
+                    courses: selectedCourses,
+                },
+                path: "/manage/coupon"
+            })
+
+            if (coupon) {
+                Swal.fire({
+                    title: "Cập nhật thành công!",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1000,
+                });
+                setTimeout(() => {
+                    router.push("/manage/coupon");
+                }, 1000);
+                return;
+            }
+        } catch (error) {
+            Swal.fire({
+                title: "Lỗi khi cập nhật!",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            return
         }
     }
 
@@ -168,7 +190,7 @@ const NewCouponForm = () => {
                     />
                     <FormField
                         control={form.control}
-                        name="startDate"
+                        name="start_date"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Ngày bắt đầu</FormLabel>
@@ -196,7 +218,7 @@ const NewCouponForm = () => {
                     />
                     <FormField
                         control={form.control}
-                        name="endDate"
+                        name="end_date"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Ngày kết thúc</FormLabel>
@@ -375,11 +397,11 @@ const NewCouponForm = () => {
                     />
                 </div>
                 <Button variant="primary" className="w-[150px] ml-auto flex">
-                    Tạo mã
+                    Cập nhật
                 </Button>
             </form>
         </Form>
-    );
-};
+    )
+}
 
-export default NewCouponForm;
+export default CouponUpdate

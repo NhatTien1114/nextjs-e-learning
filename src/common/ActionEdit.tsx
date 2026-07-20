@@ -3,12 +3,12 @@ import IconEdit from '@/components/icons/IconEdit';
 import { commonClassNames } from '@/constants';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import React from 'react'
+import React, { MouseEvent } from 'react'
 type TIcon = "edit" | "delete";
-const ActionEdit = ({ onClick, icon, url }: { onClick?: (e: React.MouseEvent<HTMLSpanElement>) => void, icon: TIcon, url?: string }) => {
+const ActionEdit = ({ onClick, icon, url }: { onClick?: (e: MouseEvent<HTMLButtonElement>) => void, icon: TIcon, url?: string }) => {
     return (
         <>
-            {url &&
+            {url ?
                 <Link
                     className={cn(
                         commonClassNames.action
@@ -17,15 +17,17 @@ const ActionEdit = ({ onClick, icon, url }: { onClick?: (e: React.MouseEvent<HTM
                 >
                     <IconEdit />
                 </Link>
+                :
+                <button
+                    className={cn(
+                        commonClassNames.action
+                    )}
+                    onClick={onClick}
+                    type="submit"
+                >
+                    {icon === "edit" ? <IconEdit /> : <IconDelete />}
+                </button>
             }
-            <span
-                className={cn(
-                    commonClassNames.action
-                )}
-                onClick={onClick}
-            >
-                {icon === "edit" ? <IconEdit /> : <IconDelete />}
-            </span>
         </>
     )
 }
