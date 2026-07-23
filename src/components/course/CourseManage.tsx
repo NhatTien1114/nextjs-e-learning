@@ -154,12 +154,11 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                     <Select
                         onValueChange={(value) => handleStatus(value as ECourseStatus)}
                     >
-                        <SelectTrigger className="w-full z-10 bg-white dark:bg-grayDarker border border-gray-200 hover:border-primary/70 transition-all">
+                        <SelectTrigger className="text-grayDark border borderDarkMode w-full z-10 bgDarkMode hover:border-primary/70 transition-all">
                             <SelectValue placeholder="Chọn trạng thái" />
                         </SelectTrigger>
-                        <SelectContent className="bg-white dark:bg-grayDarker w-full">
+                        <SelectContent className="border borderDarkMode text-white bgDarkMode w-full">
                             <SelectGroup>
-                                <SelectLabel>Chọn trạng thái</SelectLabel>
                                 {courseStatus.map((status) => (
                                     <SelectItem key={status.value} value={status.value}>
                                         {status.title}
@@ -206,8 +205,8 @@ const CourseManage = ({ courses }: { courses: ICourse[] }) => {
                             <TableCell>
                                 <div className="flex items-center gap-4">
                                     <Image
-                                        src={course.image || ''}
-                                        alt={course.title || ''}
+                                        src={course.image}
+                                        alt={course.title}
                                         width={80}
                                         height={60}
                                         className="rounded-md object-cover flex-shrink-0"

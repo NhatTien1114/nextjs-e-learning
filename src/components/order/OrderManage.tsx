@@ -95,7 +95,7 @@ const OrderManage = ({ orders = [] }: { orders: IOrderManageProps[] }) => {
                     <Select
                         onValueChange={(value) => handleSelectStatus(value as EOrderStatus)}
                     >
-                        <SelectTrigger className="w-[180px] bg-grayDarker">
+                        <SelectTrigger className="bgDarkMode border borderDarkMode w-[180px] bg-grayDarker">
                             <SelectValue placeholder="Chọn trạng thái" />
                         </SelectTrigger>
                         <SelectContent className="bg-grayDarker">

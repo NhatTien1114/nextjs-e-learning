@@ -3,6 +3,7 @@ import React from 'react'
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from '../api/uploadthing/core';
+import Header from '@/components/layouts/Header';
 
 const layout = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -18,7 +19,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
             />
             <div className="wrapper block lg:grid lg:grid-cols-[300px_minmax(0,1fr)] h-screen">
                 <Sidebar />
-                <main className="bg-gray-200 dark:bg-grayDarkest pb-20 lg:pb-0 h-full overflow-y-auto">{children}</main>
+                <main className="bg-gray-200 dark:bg-grayDarkest pb-20 lg:pb-0 h-full overflow-y-auto">
+                    <Header></Header>
+                    {children}</main>
             </div>
         </div>
     )

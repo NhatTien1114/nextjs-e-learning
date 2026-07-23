@@ -1,6 +1,7 @@
 import { IconBook, IconComment, IconCourse, IconHome, IconOrder, IconUser } from "@/components/icons";
 import IconCoupon from "@/components/icons/IconCoupon";
 import { ECouponType, ECourseLevel, ECourseStatus, EOrderStatus } from "@/types/enum";
+import { LayoutPanelTop } from "lucide-react";
 
 export const menuItems: {
     url: string;
@@ -16,6 +17,11 @@ export const menuItems: {
             url: "/study",
             title: "Khu vực học tập",
             icon: <IconBook className="size-5" />
+        },
+        {
+            url: "/explore",
+            title: "Danh sách khóa học",
+            icon: <LayoutPanelTop className="size-5" />
         },
         {
             url: "/manage/course",
