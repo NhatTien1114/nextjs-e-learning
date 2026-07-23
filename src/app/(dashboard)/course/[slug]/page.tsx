@@ -147,7 +147,7 @@ const page = async ({ params }: { params: Promise<{ slug: string; }>; }) => {
                 </BoxSection>
             </div>
             <div>
-                {userCourses.includes(data._id.toString()) ? (
+                {userCourses && userCourses.includes(data._id.toString()) ? (
                     <AlreadyEnroll />
                 ) : (<CourseInfo
                     findUser={findUser ? JSON.parse(JSON.stringify(findUser)) : []}
