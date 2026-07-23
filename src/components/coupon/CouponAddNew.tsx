@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
-import { couponTypes } from "@/constants";
+import { couponTypes, formSchema } from "@/constants";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { ECouponType } from "@/types/enum";
@@ -34,24 +34,6 @@ import { ICourse } from "@/database/course.model";
 import { Checkbox } from "../ui/checkbox";
 import IconClose from "../icons/IconClose";
 import { NumericFormat } from 'react-number-format';
-const formSchema = z.object({
-    title: z.string({
-        message: "Tiêu đề không được để trống",
-    }),
-    code: z
-        .string({
-            message: "Mã giảm giá không được để trống",
-        })
-        .min(3, "Mã giảm giá phải có ít nhất 3 ký tự")
-        .max(10, "Mã giảm giá không được quá 10 ký tự"),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-    active: z.boolean().optional(),
-    value: z.number().optional(),
-    type: z.string().optional(),
-    courses: z.array(z.string()).optional(),
-    limit: z.number().optional(),
-});
 const NewCouponForm = () => {
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
@@ -67,16 +49,18 @@ const NewCouponForm = () => {
             courses: [],
             code: "",
             title: "",
-            startDate: "",
-            endDate: "",
         },
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            // console.log(values);
-            const newCoupon = await createCoupon(values);
-            console.log(newCoupon);
+            const newCoupon = await createCoupon({
+                ...values,
+                type: values.type as ECouponType,
+                start_date: startDate,
+                end_date: endDate,
+                courses: selectedCourses.map((course) => course._id),
+            });
             if (newCoupon?.code) {
                 toast.success("Tạo mã giảm giá thành công");
                 form.reset(
@@ -94,6 +78,9 @@ const NewCouponForm = () => {
                 setEndDate(undefined);
                 setSelectedCourses([]);
                 setFindCourse([]);
+            } else {
+                toast.error("Mã giảm giá đã tồn tại");
+                return;
             }
         } catch (error: any) {
             toast.error(error.message || "Tạo mã giảm giá thất bại");
@@ -168,7 +155,7 @@ const NewCouponForm = () => {
                     />
                     <FormField
                         control={form.control}
-                        name="startDate"
+                        name="start_date"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Ngày bắt đầu</FormLabel>
@@ -196,7 +183,7 @@ const NewCouponForm = () => {
                     />
                     <FormField
                         control={form.control}
-                        name="endDate"
+                        name="end_date"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Ngày kết thúc</FormLabel>

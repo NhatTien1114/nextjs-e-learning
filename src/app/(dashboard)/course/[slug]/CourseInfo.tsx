@@ -1,21 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { IconBook, IconEye, IconLock, IconUser } from '@/components/icons'
-import React from 'react'
+import React, { useState } from 'react'
 import ButtonBuyCourse from './ButtonBuyCourse'
+import ApplyCoupon from './ApplyCoupon'
 
 const CourseInfo = ({ findUser, data }: { findUser: any, data: any }) => {
+    const [price, setPrice] = useState<number>(data.price);
     return (
-        <div className="bg-white rounded-lg p-5 sticky top-5">
+        <div className="bg-white rounded-lg p-5 sticky top-30">
             <div className="flex items-center gap-2 mb-3">
                 <strong className="text-primary text-xl font-bold">
-                    {data.price.toLocaleString("vi-VN")}đ
+                    {price.toLocaleString("vi-VN")}đ
                 </strong>
                 <span className="text-slate-400 line-through text-sm">
                     {data.sale_price.toLocaleString("vi-VN")}đ
                 </span>
                 <span className="ml-auto inline-block px-3 py-1 rounded-lg bg-primary/20 text-primary font-semibold text-sm">
-                    {Math.floor((data.sale_price / data.price) * 100)}%
+                    {Math.floor((data.sale_price / price) * 100)}%
                 </span>
             </div>
             <h3 className="font-bold mb-3 text-sm text-black">Khóa học gồm có:</h3>
@@ -40,8 +42,12 @@ const CourseInfo = ({ findUser, data }: { findUser: any, data: any }) => {
             <ButtonBuyCourse
                 user={findUser ? JSON.parse(JSON.stringify(findUser)) : null}
                 courseId={data ? JSON.parse(JSON.stringify(data._id)) : null}
-                amount={data.price}
+                amount={price}
             />
+            <ApplyCoupon
+                price={price}
+                setPrice={setPrice}
+            ></ApplyCoupon>
         </div>
     )
 }

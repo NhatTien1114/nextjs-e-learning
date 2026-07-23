@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
-import { couponTypes } from "@/constants";
+import { couponTypes, formSchema } from "@/constants";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { ECouponType } from "@/types/enum";
 import { NumericFormat } from 'react-number-format';
@@ -38,24 +38,6 @@ import { updateCoupon } from "@/lib/action/coupon.action";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
-const formSchema = z.object({
-    title: z.string({
-        message: "Tiêu đề không được để trống",
-    }),
-    code: z
-        .string({
-            message: "Mã giảm giá không được để trống",
-        })
-        .min(3, "Mã giảm giá phải có ít nhất 3 ký tự")
-        .max(10, "Mã giảm giá không được quá 10 ký tự"),
-    start_date: z.string().optional(),
-    end_date: z.string().optional(),
-    active: z.boolean().optional(),
-    value: z.number().optional(),
-    type: z.string().optional(),
-    courses: z.array(z.string()).optional(),
-    limit: z.number().optional(),
-});
 const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
 
     const [findCourse, setFindCourse] = useState<any[] | undefined>([]);
@@ -118,8 +100,8 @@ const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
     const router = useRouter();
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            const coupon = await updateCoupon({
-                code: values.code,
+            const res = await updateCoupon({
+                _id: coupon._id,
                 updateData: {
                     ...values,
                     start_date: startDate,
@@ -129,7 +111,7 @@ const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
                 path: "/manage/coupon"
             })
 
-            if (coupon) {
+            if (res.success) {
                 Swal.fire({
                     title: "Cập nhật thành công!",
                     icon: "success",
@@ -177,6 +159,7 @@ const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
                                 <FormLabel>Code</FormLabel>
                                 <FormControl>
                                     <Input
+                                        disabled
                                         placeholder="Mã giảm giá"
                                         {...field}
                                         onChange={(e) =>
@@ -252,8 +235,8 @@ const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
                                 <FormLabel>Loại coupon</FormLabel>
                                 <FormControl>
                                     <RadioGroup
-                                        defaultValue={ECouponType.PERCENT}
                                         className="flex gap-5 mt-5"
+                                        defaultValue={coupon.type}
                                         onValueChange={field.onChange}
                                     >
                                         {couponTypes.map((type) => (

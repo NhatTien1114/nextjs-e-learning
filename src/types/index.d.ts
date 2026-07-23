@@ -99,27 +99,35 @@ type TCreateOrderParams = {
 }
 
 type TCreateCouponParams = {
-    title?: string,
-    code?: string,
-    startDate?: string,
-    endDate?: string,
-    active?: boolean,
-    value?: number,
-    type?: string,
-    courses?: string[],
-    limit?: number,
+    title: string;
+    code: string;
+    type: ECouponType;
+    value?: number;
+    start_date?: Date;
+    end_date?: Date;
+    active?: boolean;
+    limit?: number;
+    courses?: string[];
+    path?: string;
 }
 
 type TUpdateCouponParams = {
-    code: string,
-    updateData: Partial<ICoupon> | any
+    _id: string,
+    updateData: Partial<TCreateCouponParams>,
     path?: string
 }
+
+type TCouponParams = Omit<ICoupon, "courses"> & {
+    courses: {
+        _id: string;
+        title: string;
+    }[];
+};
 
 export {
     TActiveLinkProps, TMenuItems, TUserParams,
     TCourseParams, TCourseUpdateParams, TCreateLectureParams,
     TUpdateLectureParams, TUpdateCourseParams, TCreateLessonParams,
     TUpdateCourseLecture, TUpdateLessonParams, TCreateHistoryParams, TAllCourse,
-    TCreateOrderParams, TCreateCouponParams, TUpdateCouponParams
+    TCreateOrderParams, TCreateCouponParams, TUpdateCouponParams, TCouponParams
 }

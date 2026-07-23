@@ -53,6 +53,7 @@ const couponSchema = new Schema<ICoupon>({
         type: String,
         enum: Object.values(ECouponType),
         default: ECouponType.PERCENT,
+        required: true
     },
     value: {
         type: Number,
