@@ -63,7 +63,7 @@ export const getCoupon = async () => {
     }
 }
 
-export const getCouponByCode = async (params: TCouponParams): Promise<ICoupon | any> => {
+export const getCouponByCode = async (params: { code: string }): Promise<TCouponParams | any> => {
     try {
         await connectToDatabase();
         const findCoupon = await Coupon.findOne({ code: params.code }).populate({

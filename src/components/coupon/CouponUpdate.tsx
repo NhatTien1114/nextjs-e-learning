@@ -40,8 +40,10 @@ import { useRouter } from "next/navigation";
 
 const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
 
-    const [findCourse, setFindCourse] = useState<any[] | undefined>([]);
-    const [selectedCourses, setSelectedCourses] = useState<any[]>([]);
+    const [findCourse, setFindCourse] = useState<ICourse[] | undefined>([]);
+    const [selectedCourses, setSelectedCourses] = useState<ICourse[]>(
+        (coupon.courses as unknown as ICourse[]) || []
+    );
     const [startDate, setStartDate] = useState<Date | undefined>(
         coupon.start_date ? new Date(coupon.start_date) : undefined
     );
@@ -59,12 +61,6 @@ const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
             title: coupon.title,
         },
     });
-
-    useEffect(() => {
-        if (coupon.courses) {
-            setSelectedCourses(coupon.courses)
-        }
-    }, [coupon.courses])
 
     const handleSearch = debounce(async (e: React.ChangeEvent<HTMLInputElement>) => {
         try {
@@ -106,7 +102,7 @@ const CouponUpdate = ({ coupon }: { coupon: ICoupon }) => {
                     ...values,
                     start_date: startDate,
                     end_date: endDate,
-                    courses: selectedCourses,
+                    courses: selectedCourses.map((c) => c._id),
                 },
                 path: "/manage/coupon"
             })

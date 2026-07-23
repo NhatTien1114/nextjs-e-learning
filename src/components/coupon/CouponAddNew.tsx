@@ -82,8 +82,8 @@ const NewCouponForm = () => {
                 toast.error("Mã giảm giá đã tồn tại");
                 return;
             }
-        } catch (error: any) {
-            toast.error(error.message || "Tạo mã giảm giá thất bại");
+        } catch (error) {
+            toast.error((error as Error)?.message || "Tạo mã giảm giá thất bại");
         }
     }
     const couponTypeWatch = useWatch({
